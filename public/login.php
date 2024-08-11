@@ -1,6 +1,49 @@
 <?php 
 
-include("../src/config/php/conection.php");
+include "../src/config/php/conection.php";
+
+if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
+    //a verificação de campos aqui, poderia ser feita com um or
+    if(strlen($_POST['emailClient'])  == 0){
+        echo "<script>alert('Preencha o campo email')</script>";
+    }else if(strlen($_POST['passwordClient']) == 0){
+        echo "<script>alert('Preencha o campo senha')</script>";
+    }else{
+        //não achei um jeito bom de prevenir o SQL injection com PDO. Deixei o jeito em mysqli em baixo(serve pra senha tbm)
+        // $email = $mysqli->real_escape_string($_POST['emailClient']);
+
+        $email = $_POST['emailClient'];
+        $senha = $_POST['passwordClient'];
+
+        $sql = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$senha' ");
+        $sql->execute();
+
+        //falta a verificação de erro, q mata o códido. Deixei o jeito em mysqli em baixo
+        //$sql_query = $mysqli->query($sql_code) or die('erro: ' . mysqli->error);
+
+        $quantidade = $sql->rowCount();
+
+        if($quantidade == 1){
+            //fecthAll não está funcionando
+            $cliente = $sql->fetch(PDO::FETCH_ASSOC);
+
+            if(!isset($_SESSION)){
+                session_start();
+            }
+
+            $_SESSION['idClient'] = $cliente['idClient'];
+            $_SESSION['nameClient'] = $cliente['nameClient'];
+
+            echo $_SESSION['idClient'], $_SESSION['nameClient'];
+            
+            header('Location: perfilCliente.php');
+            //O header envia para outra página com uma request HTTP
+
+        }else{
+            echo 'Falha ao logar! Email ou senha incorretos';
+        }
+    }
+}
 
 ?>
 
