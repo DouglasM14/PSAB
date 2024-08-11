@@ -1,3 +1,7 @@
+<?php
+include "..src/config/php/conection.php";
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
