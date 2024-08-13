@@ -14,6 +14,7 @@
 
     <main>
         <a href="login.php">Entra na sua conta</a>
+        <a href="register.html">Cadastra-se</a>
     </main>
 
     <Footer>
