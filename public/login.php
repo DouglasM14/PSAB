@@ -36,7 +36,7 @@ if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
 
             echo $_SESSION['idClient'], $_SESSION['nameClient'];
             
-            header('Location: perfilCliente.php');
+            header('Location: clientAccount.php');
             //O header envia para outra página com uma request HTTP
 
         }else{
