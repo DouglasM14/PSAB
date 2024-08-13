@@ -6,6 +6,6 @@ if(!isset($_SESSION)){
 
 if(!isset($_SESSION['idClient'])){
     die("Você não pode acessar acessar esta página.<p>
-    <a href=\"..\..\..\public\index2.php\">Voltar ao Menu Inicial<\a>
-    <\p>");
+    <a href=\"..\..\..\public\index2.php\">Voltar ao Menu Inicial</a>
+    </p>");
 }

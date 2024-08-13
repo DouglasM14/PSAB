@@ -15,7 +15,7 @@ if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
         $email = $_POST['emailClient'];
         $senha = $_POST['passwordClient'];
 
-        $sql = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$senha' ");
+        $sql = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$senha' LIMIT 1");
         $sql->execute();
 
         //falta a verificação de erro, q mata o códido. Deixei o jeito em mysqli em baixo
@@ -36,7 +36,7 @@ if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
 
             echo $_SESSION['idClient'], $_SESSION['nameClient'];
             
-            header('Location: perfilCliente.php');
+            header('Location: clientAccount.php');
             //O header envia para outra página com uma request HTTP
 
         }else{
