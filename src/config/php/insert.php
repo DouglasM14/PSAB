@@ -7,7 +7,7 @@ $passwordClient = $_POST["passwordClient"];
 try{
     include "conection.php";
 
-    $sql = $conn->prepare("SELECT nameClient FROM tb_client WHERE emailClient = ' $emailClient ' LIMIT 1");
+    $sql = $conn->prepare("SELECT nameClient FROM tb_client WHERE emailClient = '$emailClient' LIMIT 1");
     $sql->execute();
 
     $row = $sql->rowCount();
@@ -18,7 +18,13 @@ try{
         <a href=\"..\..\..\public\login.php\">voltar a área de login</a>
         </p>";
     }else{
-        echo "cadastre-se";
+        $query = $conn->prepare("INSERT INTO tb_client (nameClient, emailClient, passwordClient) VALUES (:nameClient, :emailClient, :passwordClient)");
+        $query->bindValue(':nameClient', $nameClient);
+        $query->bindValue('emailClient', $emailClient);
+        $query->bindValue('passwordClient', $passwordClient);
+        $query->execute();
+
+        echo "tudo nos conformes";
     }
     
 }catch(PDOException $e){
