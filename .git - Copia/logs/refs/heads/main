@@ -1,0 +1,15 @@
+0000000000000000000000000000000000000000 0475f50ef749effb88fb787364ed89278320111b link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723323744 -0300	clone: from https://github.com/DouglasM14/PSAB.git
+0475f50ef749effb88fb787364ed89278320111b e58185eac0eb9ee29c664e9db1b9b33e4ad1745f link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723323881 -0300	commit: teste compatibilidade
+e58185eac0eb9ee29c664e9db1b9b33e4ad1745f ca4954d6a1188b37119d2a44f6372ef4316c9881 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723323925 -0300	commit: delete teste
+ca4954d6a1188b37119d2a44f6372ef4316c9881 a1a9c4682abcdd3d428940fbf54c40efb6a98583 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723324282 -0300	commit: teste
+a1a9c4682abcdd3d428940fbf54c40efb6a98583 bffccb99e747aa3071906de926a3a2f78df6b93b link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723324314 -0300	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+bffccb99e747aa3071906de926a3a2f78df6b93b 9889d09b2f070c34751d5e42b437a2b905b2b273 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723324542 -0300	commit: delete teste
+9889d09b2f070c34751d5e42b437a2b905b2b273 f0c1b17266b257118d9e04736e5864b4cbf3dec4 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723324551 -0300	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+f0c1b17266b257118d9e04736e5864b4cbf3dec4 70c001df7070a613c8e675c65e219170d1028c1b link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723324601 -0300	pull --ff --recurse-submodules --progress origin: Fast-forward
+70c001df7070a613c8e675c65e219170d1028c1b a7024ffdc5e351f714b15b7a9c2adce592efedc1 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723324653 -0300	commit: teste
+a7024ffdc5e351f714b15b7a9c2adce592efedc1 561c0cd0efd59709af3d271cdf7ee110b1a4e7b3 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723324716 -0300	commit: delete teste
+561c0cd0efd59709af3d271cdf7ee110b1a4e7b3 62ba2e87a4053c60f0da5ded3462b504ef90fa5f link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723325380 -0300	pull: fast-forward
+62ba2e87a4053c60f0da5ded3462b504ef90fa5f 81f03bc5f99ba312a9ddf929db60f90d434b9ecf link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723327438 -0300	pull: fast-forward
+81f03bc5f99ba312a9ddf929db60f90d434b9ecf 790d254b84d40f281859a319f44f1ce22e0f4103 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723559851 -0300	pull: fast-forward
+790d254b84d40f281859a319f44f1ce22e0f4103 86cdc3d714a11ad36bb45f14d5c1fb2a46249ee3 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723596745 -0300	pull: fast-forward
+86cdc3d714a11ad36bb45f14d5c1fb2a46249ee3 e9a8acc29580e77f6f69749279aa9a844680bfc1 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723681830 -0300	pull: fast-forward
