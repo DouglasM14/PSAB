@@ -3,9 +3,11 @@
 $nameClient = $_POST["nameClient"];
 $emailClient = $_POST["emailClient"];
 $passwordClient = $_POST["passwordClient"];
+$senhaNova = password_hash($passwordClient, PASSWORD_DEFAULT);
+
 
 try{
-    include "conection.php";
+    require_once "conection.php";
 
     $sql = $conn->prepare("SELECT nameClient FROM tb_client WHERE emailClient = '$emailClient' LIMIT 1");
     $sql->execute();
@@ -17,6 +19,10 @@ try{
         echo "<p>
         <a href=\"..\..\..\public\login.php\">voltar a área de login</a>
         </p>";
+        echo $senhaNova;
+        if (password_verify($passwordClient, $senhaNova)) {
+            echo $passwordClient;
+        }
     }else{
         $query = $conn->prepare("INSERT INTO tb_client (nameClient, emailClient, passwordClient) VALUES (:nameClient, :emailClient, :passwordClient)");
         $query->bindValue(':nameClient', $nameClient);

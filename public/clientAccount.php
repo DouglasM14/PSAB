@@ -18,7 +18,7 @@ include_once "../src/config/php/protect.php"
     </header>
 
     <main>
-        <h2>Bem vindo <?php echo $_SESSION['nameClient']; ?> safado</h2>
+        <h2>Bem vindo <?php echo $_SESSION['nameClient']; ?></h2>
 
         <p>
             <a href="../src/config/php/logout.php">sair</a>
@@ -26,7 +26,7 @@ include_once "../src/config/php/protect.php"
     </main>
 
     <Footer>
-        <p>Site desenvolvido por Douglas & Eduardo</p>
+        <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis 2024</p>
     </Footer>
 </body>

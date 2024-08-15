@@ -1,6 +1,6 @@
 <?php 
 
-include "../src/config/php/conection.php";
+require_once "../src/config/php/conection.php";
 
 if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
     //a verificação de campos aqui, poderia ser feita com um or
@@ -37,7 +37,6 @@ if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
             echo $_SESSION['idClient'], $_SESSION['nameClient'];
             
             header('Location: clientAccount.php');
-            //O header envia para outra página com uma request HTTP
 
         }else{
             echo 'Falha ao logar! Email ou senha incorretos';
@@ -46,8 +45,6 @@ if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
 }
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -88,7 +85,7 @@ if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
     </main>
 
     <Footer>
-        <p>Site desenvolvido por Douglas & Eduardo</p>
+        <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis 2024</p>
     </Footer>
 </body>

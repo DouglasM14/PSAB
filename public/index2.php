@@ -18,7 +18,7 @@
     </main>
 
     <Footer>
-        <p>Site desenvolvido por Douglas & Eduardo</p>
+        <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis 2024</p>
     </Footer>
 </body>

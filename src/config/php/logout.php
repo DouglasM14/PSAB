@@ -7,4 +7,4 @@ if(!isset($_SESSION)){
 session_unset();
 session_destroy();
 
-header("location: ../../public/index2.php");
+header("location: ../../../public/index2.php");
