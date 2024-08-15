@@ -14,7 +14,7 @@
 
     <main>
         <section>
-            <form action="" method="POST">
+            <form action="../src/config/php/insert.php" method="POST">
                 <div>
                     <label for="nameClient">Nome: </label>
                     <input type="text" name="nameClient" id="">
@@ -47,7 +47,7 @@
     </main>
 
     <Footer>
-        <p>Site desenvolvido por Douglas & Eduardo</p>
+        <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis 2024</p>
     </Footer>
 </body>

@@ -1,8 +1,0 @@
-0000000000000000000000000000000000000000 a7024ffdc5e351f714b15b7a9c2adce592efedc1 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723325209 -0300	branch: Created from origin/douglas
-a7024ffdc5e351f714b15b7a9c2adce592efedc1 7a51eaacd7503ee1688d0b0790ed231e544f002c link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723325223 -0300	commit: teste
-7a51eaacd7503ee1688d0b0790ed231e544f002c 11ebf1f2bd53629c294781e6d9993067afab6642 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723325231 -0300	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
-11ebf1f2bd53629c294781e6d9993067afab6642 10d925767537e846a42437b8425a735767e3a33f link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723325375 -0300	commit: delete teste
-10d925767537e846a42437b8425a735767e3a33f e32cf5357d212d054c47660f353fe3f301ed27a0 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723341570 -0300	commit: 1.0.1
-e32cf5357d212d054c47660f353fe3f301ed27a0 5855dea5d650303e4e675f183dca8fa4a3fe2351 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723560782 -0300	commit: 1.0.2
-5855dea5d650303e4e675f183dca8fa4a3fe2351 98152c14ad8624d338b959b06faa09636c67dce2 link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723562912 -0300	commit: 1.1.0
-98152c14ad8624d338b959b06faa09636c67dce2 4b24728fa8d6b456e4465c95af01121a3413f4ea link_devote <160704579+EduardoNascimentoSoares@users.noreply.github.com> 1723598507 -0300	commit: 1.1.1
