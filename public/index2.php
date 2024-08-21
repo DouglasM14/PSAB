@@ -9,7 +9,7 @@
 
 <body>
     <header>
-        <h1>PSAB - index</h1>
+        <h1>PSAB - Home</h1>
     </header>
 
     <main>

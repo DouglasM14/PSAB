@@ -9,7 +9,7 @@
 
 <body>
     <header>
-        <h1>PSAB - register</h1>
+        <h1>PSAB - Registrar</h1>
     </header>
 
     <main>
