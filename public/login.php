@@ -1,44 +1,47 @@
-<?php 
+<?php
+include_once "../src/config/php/conection.php";
 
-require_once "../src/config/php/conection.php";
+if (!isset($_SESSION)) {
+    session_start();
+    header("location: clientAccount.php");
+}
 
-if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
-    //a verificação de campos aqui, poderia ser feita com um or
-    if(strlen($_POST['emailClient'])  == 0){
-        echo "<script>alert('Preencha o campo email')</script>";
-    }else if(strlen($_POST['passwordClient']) == 0){
-        echo "<script>alert('Preencha o campo senha')</script>";
-    }else{
+if (isset($_POST['emailClient']) || isset($_PFOST['passwordClient'])) {
+    if (strlen($_POST['emailClient'])  == 0) {
+        // echo "<script>alert('Preencha o campo email')</script>";
+    } else if (strlen($_POST['passwordClient']) == 0) {
+        // echo "<script>alert('Preencha o campo senha')</script>";
+    } else {
         //não achei um jeito bom de prevenir o SQL injection com PDO. Deixei o jeito em mysqli em baixo(serve pra senha tbm)
         // $email = $mysqli->real_escape_string($_POST['emailClient']);
 
         $email = $_POST['emailClient'];
         $senha = $_POST['passwordClient'];
 
-        $sql = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$senha' LIMIT 1");
-        $sql->execute();
+        $stmt = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$senha' LIMIT 1");
+        $stmt->execute();
 
         //falta a verificação de erro, q mata o códido. Deixei o jeito em mysqli em baixo
         //$sql_query = $mysqli->query($sql_code) or die('erro: ' . mysqli->error);
 
-        $quantidade = $sql->rowCount();
+        // $quantidade = $sql->rowCount();
+        $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if($quantidade == 1){
+        // if($quantidade == 1){
+        if (count($resultado) == 1) {
             //fecthAll não está funcionando
-            $cliente = $sql->fetch(PDO::FETCH_ASSOC);
+            // $cliente = $sql->fetch(PDO::FETCH_ASSOC);
 
-            if(!isset($_SESSION)){
+            if (!isset($_SESSION)) {
                 session_start();
             }
 
-            $_SESSION['idClient'] = $cliente['idClient'];
-            $_SESSION['nameClient'] = $cliente['nameClient'];
+            $_SESSION['idClient'] = $resultado['idClient'];
+            $_SESSION['nameClient'] = $resultado['nameClient'];
 
-            echo $_SESSION['idClient'], $_SESSION['nameClient'];
-            
+            // echo $_SESSION['idClient'], $_SESSION['nameClient'];
             header('Location: clientAccount.php');
-
-        }else{
+        } else {
             echo 'Falha ao logar! Email ou senha incorretos';
         }
     }
@@ -61,7 +64,7 @@ if(isset($_POST['emailClient']) || isset($_POST['passwordClient'])){
 
     <main>
         <section>
-            <form action="" method="post">
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
                 <div>
                     <label for="emailClient">Email: </label>
                     <input type="text" name="emailClient" id="" value="">

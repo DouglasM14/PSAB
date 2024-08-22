@@ -6,7 +6,7 @@ if(!isset($_SESSION)){
 }
 
 if(!isset($_SESSION['idClient'])){
-    die("Você não pode acessar acessar esta página.<p>
-    <a href=\"index2.php\">Voltar ao Menu Inicial</a>
+    die("Você não está logado.<p>
+    <a href=\"login.php\">Logar</a>
     </p>");
 }

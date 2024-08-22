@@ -1,5 +1,5 @@
 <?php
-include "../src/config/php/conection.php";
+include_once "../src/config/php/conection.php";
 include_once "../src/config/php/protect.php";
 ?>
 
@@ -20,13 +20,19 @@ include_once "../src/config/php/protect.php";
     <main>
         <h2>Bem vindo <?php echo $_SESSION['nameClient']; ?></h2>
 
-        <p>
-            <a href="scheduling.php">Marque um horário aqui</a>
-        </p>
+        <section>
+            <p>
+                <a href="scheduling.php">Marque um horário aqui</a>
+            </p>
 
-        <p>
-            <a href="../src/config/php/logout.php">sair</a>
-        </p>
+            <p>
+                <a href="services.php">Visualizar serviços disponíveis</a>
+            </p>
+
+            <p>
+                <a href="../src/config/php/logout.php">sair</a>
+            </p>
+        </section>
     </main>
 
     <Footer>

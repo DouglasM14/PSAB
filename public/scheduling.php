@@ -1,8 +1,23 @@
-<?php 
-include "../src/config/php/conection.php";
+<?php
+include_once "../src/config/php/conection.php";
 include_once "../src/config/php/protect.php";
 
-print_r($_POST)
+if (isset($_SESSION)) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $barber = $_POST['barber'];
+        $time = $_POST['time'];
+        $date = $_POST['date'];
+        $sql = $conn->prepare("INSERT INTO tb_schedule (timeSchedule, dateSchedule, idClient, idBarber) VALUES (:timeSchedule, :dateSchedule, :idCliet, :idBarber)");
+        $sql->bindValue('timeSchedule', $time);
+        $sql->bindValue('dateSchedule', $date);
+        $sql->bindValue('idCliet', $_SESSION['idClient']);
+        $sql->bindValue('idBarber', $barber);
+        $sql->execute();
+        echo "Dados enviados com sucesso";
+    }
+} else {
+    echo "Deu ruim";
+}
 
 ?>
 
@@ -24,24 +39,28 @@ print_r($_POST)
         <section>
             <form action="#" method="post">
                 <div>
-                    <label for="">Escolha o Barbeiro: </label>
-                    <select name="barber" id="" multiple size="3">
+                    <label for="barber">Escolha o Barbeiro: </label>
+                    <select name="barber" id="barber" multiple size="3">
                         <option value="1">Tico</option>
                         <option value="2">Barbeiro 1</option>
                         <option value="3">Barbeiro 2</option>
                     </select>
                 </div>
                 <div>
-                    <label for="">Escolha a hora</label>
-                    <input type="time" name="time">
+                    <label for="time">Escolha a hora</label>
+                    <input type="time" id="time" name="time">
                 </div>
                 <div>
-                    <label for="">Escolha o dia.</label>
-                    <input type="date" name="date">
+                    <label for="date">Escolha o dia.</label>
+                    <input type="date" id="date" name="date">
                 </div>
 
                 <button type="submit">Marcar Horário</button>
             </form>
+        </section>
+
+        <section>
+            <p><a href="clientAccount.php">Voltar</a></p>
         </section>
     </main>
 

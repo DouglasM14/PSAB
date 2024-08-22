@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 21/08/2024 às 03:30
+-- Tempo de geração: 22/08/2024 às 02:46
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -79,14 +79,15 @@ CREATE TABLE IF NOT EXISTS `tb_client` (
   `emailClient` varchar(75) NOT NULL,
   `passwordClient` varchar(32) NOT NULL,
   PRIMARY KEY (`idClient`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Tabela dos clientes da barbearia';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Tabela dos clientes da barbearia';
 
 --
 -- Despejando dados para a tabela `tb_client`
 --
 
 INSERT INTO `tb_client` (`idClient`, `nameClient`, `emailClient`, `passwordClient`) VALUES
-(1, 'Douglas', 'douglas@gmail.com', 'douglas123');
+(1, 'Douglas', 'douglas@gmail.com', 'douglas123'),
+(2, 'Douglas', 'do', '123');
 
 -- --------------------------------------------------------
 
@@ -95,15 +96,55 @@ INSERT INTO `tb_client` (`idClient`, `nameClient`, `emailClient`, `passwordClien
 --
 
 CREATE TABLE IF NOT EXISTS `tb_schedule` (
-  `isSchedule` int(11) NOT NULL AUTO_INCREMENT,
-  `time` time NOT NULL,
-  `date` date NOT NULL,
+  `idSchedule` int(11) NOT NULL AUTO_INCREMENT,
+  `timeSchedule` time NOT NULL,
+  `dateSchedule` date NOT NULL,
   `idClient` int(11) NOT NULL,
   `idBarber` int(11) NOT NULL,
-  PRIMARY KEY (`isSchedule`),
+  PRIMARY KEY (`idSchedule`),
   KEY `idClient` (`idClient`),
   KEY `idBarber` (`idBarber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_schedule`
+--
+
+INSERT INTO `tb_schedule` (`idSchedule`, `timeSchedule`, `dateSchedule`, `idClient`, `idBarber`) VALUES
+(1, '23:00:00', '2024-08-21', 2, 1),
+(2, '23:00:00', '2024-08-21', 2, 1),
+(3, '23:00:00', '2024-08-21', 2, 1),
+(4, '23:00:00', '2024-08-21', 2, 1),
+(5, '23:00:00', '2024-08-21', 2, 1),
+(6, '23:00:00', '2024-08-21', 2, 1),
+(7, '21:25:00', '2024-08-21', 2, 1),
+(8, '21:25:00', '2024-08-21', 2, 1),
+(9, '20:34:00', '2024-08-13', 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `tb_service`
+--
+
+CREATE TABLE IF NOT EXISTS `tb_service` (
+  `idService` int(11) NOT NULL AUTO_INCREMENT,
+  `nameService` varchar(50) NOT NULL,
+  `descriptionService` varchar(255) NOT NULL,
+  `priceService` int(11) NOT NULL,
+  PRIMARY KEY (`idService`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_service`
+--
+
+INSERT INTO `tb_service` (`idService`, `nameService`, `descriptionService`, `priceService`) VALUES
+(1, 'Hidratação', 'Descrição muito foda do serviço', 10),
+(2, 'Perfil', 'Descrição muito foda do serviço', 10),
+(3, 'Sobrancelha', 'Descrição muito foda do serviço', 10),
+(4, 'Barba', 'Descrição muito foda do serviço', 30),
+(5, 'Corte', 'Descrição muito foda do serviço', 30);
 
 --
 -- Restrições para tabelas despejadas

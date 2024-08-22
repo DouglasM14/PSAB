@@ -10,11 +10,16 @@
 <body>
     <header>
         <h1>PSAB - Home</h1>
+        <nav>
+            <a href="login.php">Entra na sua conta</a>
+            <a href="register.php">Cadastra-se</a>
+        </nav>
     </header>
 
     <main>
-        <a href="login.php">Entra na sua conta</a>
-        <a href="register.php">Cadastra-se</a>
+        <section>
+            <h3><a href="services.php">Serviços oferecidos</a></h3>
+        </section>
     </main>
 
     <Footer>

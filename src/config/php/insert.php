@@ -5,7 +5,6 @@ $emailClient = $_POST["emailClient"];
 $passwordClient = $_POST["passwordClient"];
 $senhaNova = password_hash($passwordClient, PASSWORD_DEFAULT);
 
-
 try{
     require_once "conection.php";
 
@@ -25,7 +24,7 @@ try{
         }
     }else{
         $query = $conn->prepare("INSERT INTO tb_client (nameClient, emailClient, passwordClient) VALUES (:nameClient, :emailClient, :passwordClient)");
-        $query->bindValue(':nameClient', $nameClient);
+        $query->bindValue('nameClient', $nameClient);
         $query->bindValue('emailClient', $emailClient);
         $query->bindValue('passwordClient', $passwordClient);
         $query->execute();
