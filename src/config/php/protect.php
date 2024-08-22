@@ -2,11 +2,11 @@
 
 if(!isset($_SESSION)){
     session_start();
-    
 }
 
 if(!isset($_SESSION['idClient'])){
-    die("Você não está logado.<p>
-    <a href=\"login.php\">Logar</a>
+    die("Você não está logado.
+    <p>
+    <a href=\"../../../public/index2.php\">Logar</a>
     </p>");
 }

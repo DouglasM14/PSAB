@@ -1,15 +1,10 @@
 <?php
 include_once "../src/config/php/conection.php";
 
-if (!isset($_SESSION)) {
-    header("location: clientAccount.php");
-}
+if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
+    if (strlen($_POST['emailClient'])  == 0 || strlen($_POST['passwordClient']) == 0) {
+        echo "<script>alert('Preencha os campos corretamente')</script>";
 
-if (isset($_POST['emailClient']) || isset($_PFOST['passwordClient'])) {
-    if (strlen($_POST['emailClient'])  == 0) {
-        // echo "<script>alert('Preencha o campo email')</script>";
-    } else if (strlen($_POST['passwordClient']) == 0) {
-        // echo "<script>alert('Preencha o campo senha')</script>";
     } else {
         //não achei um jeito bom de prevenir o SQL injection com PDO. Deixei o jeito em mysqli em baixo(serve pra senha tbm)
         // $email = $mysqli->real_escape_string($_POST['emailClient']);
@@ -34,7 +29,6 @@ if (isset($_POST['emailClient']) || isset($_PFOST['passwordClient'])) {
             $_SESSION['idClient'] = $resultado['idClient'];
             $_SESSION['nameClient'] = $resultado['nameClient'];
 
-            // echo $_SESSION['idClient'], $_SESSION['nameClient'];
             header('Location: clientAccount.php');
         } else {
             echo 'Falha ao logar! Email ou senha incorretos';
@@ -59,7 +53,7 @@ if (isset($_POST['emailClient']) || isset($_PFOST['passwordClient'])) {
 
     <main>
         <section>
-            <form action="#" method="post">
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
                 <div>
                     <label for="emailClient">Email: </label>
                     <input type="text" name="emailClient" id="" value="">

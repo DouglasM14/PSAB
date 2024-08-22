@@ -30,6 +30,10 @@ include_once "../src/config/php/protect.php";
             </p>
 
             <p>
+                <a href="../src/config/php/delete.php">Delete sua conta</a>
+            </p>
+
+            <p>
                 <a href="../src/config/php/logout.php">sair</a>
             </p>
         </section>
