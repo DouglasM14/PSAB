@@ -2,7 +2,6 @@
 include_once "../src/config/php/conection.php";
 
 if (!isset($_SESSION)) {
-    session_start();
     header("location: clientAccount.php");
 }
 
@@ -24,13 +23,9 @@ if (isset($_POST['emailClient']) || isset($_PFOST['passwordClient'])) {
         //falta a verificação de erro, q mata o códido. Deixei o jeito em mysqli em baixo
         //$sql_query = $mysqli->query($sql_code) or die('erro: ' . mysqli->error);
 
-        // $quantidade = $sql->rowCount();
-        $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // if($quantidade == 1){
-        if (count($resultado) == 1) {
-            //fecthAll não está funcionando
-            // $cliente = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($stmt->rowCount() == 1) {
 
             if (!isset($_SESSION)) {
                 session_start();
@@ -64,7 +59,7 @@ if (isset($_POST['emailClient']) || isset($_PFOST['passwordClient'])) {
 
     <main>
         <section>
-            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
+            <form action="#" method="post">
                 <div>
                     <label for="emailClient">Email: </label>
                     <input type="text" name="emailClient" id="" value="">
