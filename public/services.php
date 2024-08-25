@@ -63,7 +63,7 @@ $resultado = $stmt->fetchALL(PDO::FETCH_ASSOC);
         </section>
 
         <section>
-            <p><a href="index.php">Voltar</a></p>
+            <p><a href="index2.php">Voltar</a></p>
         </section>
     </main>
 
