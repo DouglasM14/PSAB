@@ -18,7 +18,17 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
         
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
         if ($stmt->rowCount() == 1) {
+
+        //falta a verificação de erro, q mata o códido. Deixei o jeito em mysqli em baixo
+        //$sql_query = $mysqli->query($sql_code) or die('erro: ' . mysqli->error);
+
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($stmt->rowCount() == 1) {
+
+
             if (!isset($_SESSION)) {
                 session_start();
             }
@@ -52,7 +62,7 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
 
     <main>
         <section>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
                 <div>
                     <label for="emailClient">Email: </label>
                     <input type="text" name="emailClient" id="" value="">
