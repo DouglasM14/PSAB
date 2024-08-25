@@ -21,7 +21,6 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
         // $quantidade = $sql->rowCount();
         $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // if($quantidade == 1){
         if (count($resultado) == 1) {
             //fecthAll não está funcionando
             // $cliente = $sql->fetch(PDO::FETCH_ASSOC);
@@ -33,7 +32,9 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
             $_SESSION['idClient'] = $resultado['idClient'];
             $_SESSION['nameClient'] = $resultado['nameClient'];
 
-            header('Location: clientAccount.php');
+            echo $_SESSION['idClient'], $_SESSION['nameClient'];
+
+            // header('Location: clientAccount.php');
         } else {
             echo 'Falha ao logar! Email ou senha incorretos';
         }
