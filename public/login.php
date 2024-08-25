@@ -1,5 +1,5 @@
 <?php
-include_once "../src/config/php/conection.php";
+require_once "../src/config/php/conection.php";
 
 if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
     if (strlen($_POST['emailClient'])  == 0 || strlen($_POST['passwordClient']) == 0) {
@@ -9,11 +9,17 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
         //não achei um jeito bom de prevenir o SQL injection com PDO. Deixei o jeito em mysqli em baixo(serve pra senha tbm)
         // $email = $mysqli->real_escape_string($_POST['emailClient']);
 
-        $email = $_POST['emailClient'];
-        $senha = $_POST['passwordClient'];
+        $emailClient = $_POST['emailClient'];
+        $passwordClient = $_POST['passwordClient'];
 
-        $stmt = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$senha' LIMIT 1");
+        $stmt = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$emailClient' AND passwordClient = '$passwordClient' LIMIT 1");// or die("Error: ");
         $stmt->execute();
+        //flata ad o erro com PDOExecption
+        
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        if ($stmt->rowCount() == 1) {
 
         //falta a verificação de erro, q mata o códido. Deixei o jeito em mysqli em baixo
         //$sql_query = $mysqli->query($sql_code) or die('erro: ' . mysqli->error);
@@ -22,14 +28,17 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
 
         if ($stmt->rowCount() == 1) {
 
+
             if (!isset($_SESSION)) {
                 session_start();
             }
 
-            $_SESSION['idClient'] = $resultado['idClient'];
-            $_SESSION['nameClient'] = $resultado['nameClient'];
+            $_SESSION['idClient'] = $result['idClient'];
+            $_SESSION['nameClient'] = $result['nameClient'];
 
-            header('Location: clientAccount.php');
+            echo $_SESSION['idClient'], $_SESSION['nameClient'];
+
+            // header('Location: clientAccount.php');
         } else {
             echo 'Falha ao logar! Email ou senha incorretos';
         }

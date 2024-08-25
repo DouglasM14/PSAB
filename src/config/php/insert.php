@@ -3,7 +3,7 @@
 $nameClient = $_POST["nameClient"];
 $emailClient = $_POST["emailClient"];
 $passwordClient = $_POST["passwordClient"];
-$senhaNova = password_hash($passwordClient, PASSWORD_DEFAULT);
+
 
 try{
     require_once "conection.php";
@@ -18,10 +18,7 @@ try{
         echo "<p>
         <a href=\"..\..\..\public\login.php\">voltar a área de login</a>
         </p>";
-        echo $senhaNova;
-        if (password_verify($passwordClient, $senhaNova)) {
-            echo $passwordClient;
-        }
+
     }else{
         $query = $conn->prepare("INSERT INTO tb_client (nameClient, emailClient, passwordClient) VALUES (:nameClient, :emailClient, :passwordClient)");
         $query->bindValue('nameClient', $nameClient);
