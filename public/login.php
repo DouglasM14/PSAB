@@ -1,16 +1,30 @@
 <?php
 include_once "../src/config/php/conection.php";
 
-if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
-    if (strlen($_POST['emailClient'])  == 0 || strlen($_POST['passwordClient']) == 0) {
+if (isset($_POST['email']) || isset($_POST['password'])) {
+    if (strlen($_POST['email'])  == 0 || strlen($_POST['password']) == 0) {
         echo "<script>alert('Preencha os campos corretamente')</script>";
-
     } else {
 
-        $emailClient = $_POST['emailClient'];
-        $senhaClient = $_POST['passwordClient'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
-        $stmt = $conn->prepare("SELECT * FROM tb_client WHERE emailClient = '$emailClient' AND passwordClient = '$senhaClient' LIMIT 1");
+        $idUser = "id";
+        $nameUser = "name";
+
+        if (strpos($email, "@karraro.com") != false) {
+            $query = "SELECT idBarber, nameBarber FROM tb_barber WHERE emailBarber = '$email' AND passwordBarber = '$password' UNION SELECT idAdm, nameAdm FROM tb_adm WHERE emailAdm = '$email' AND passwordAdm = '$password' LIMIT 1;";
+            $idUser .= 'Barber';
+            $nameUser .= 'Barber';
+            $userPage = "barberAccount.php";
+        } else {
+            $query = "SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$password' LIMIT 1";
+            $idUser .= 'Client';
+            $nameUser .= 'Client';
+            $userPage = "clientAccount.php";
+        }
+
+        $stmt = $conn->prepare($query);
         $stmt->execute();
 
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -21,10 +35,10 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
                 session_start();
             }
 
-            $_SESSION['idClient'] = $resultado['idClient'];
-            $_SESSION['nameClient'] = $resultado['nameClient'];
+            $_SESSION['idUser'] = $resultado[$idUser];
+            $_SESSION['nameUser'] = $resultado[$nameUser];
 
-            header('Location: clientAccount.php');
+            header('Location:' . $userPage);
         } else {
             echo 'Falha ao logar! Email ou senha incorretos';
         }
@@ -50,13 +64,15 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
         <section>
             <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
                 <div>
-                    <label for="emailClient">Email: </label>
-                    <input type="text" name="emailClient" id="" value="">
+                    <label for="email">Email: </label>
+                    <input type="text" name="email" id="" value="">
                 </div>
 
                 <div>
-                    <label for="passwordClient">Senha: </label>
-                    <input type="password" name="passwordClient" id="">
+                    <label for="password">Senha: </label>
+                    <input type="password" name="password" id="password">
+                    <span class="toggle-password" onclick="togglePassword('password', '.toggle-password')">👁️</span>
+
                     <p><a href="">Esqueceu sua senha?</a></p>
                 </div>
 
@@ -75,6 +91,8 @@ if (isset($_POST['emailClient']) || isset($_POST['passwordClient'])) {
         <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis 2024</p>
     </Footer>
+
+    <script src="assets/js/showPass.js"></script>
 </body>
 
 </html>

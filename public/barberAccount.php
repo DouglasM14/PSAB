@@ -14,24 +14,13 @@ include_once "../src/config/php/protect.php";
 
 <body>
     <header>
-        <h1>PSAB - Perfil do Cliente</h1>
+        <h1>PSAB - Perfil do Barbeiro</h1>
     </header>
 
     <main>
         <h2>Bem vindo <?php echo $_SESSION['nameUser']; ?></h2>
 
         <section>
-            <p>
-                <a href="scheduling.php">Marque um horário aqui</a>
-            </p>
-
-            <p>
-                <a href="services.php">Visualizar serviços disponíveis</a>
-            </p>
-
-            <p>
-                <a href="../src/config/php/delete.php">Delete sua conta</a>
-            </p>
 
             <p>
                 <a href="../src/config/php/logout.php">sair</a>

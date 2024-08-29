@@ -7,12 +7,13 @@ if (isset($_SESSION)) {
         $barber = $_POST['barber'];
         $time = $_POST['time'];
         $date = $_POST['date'];
-        $sql = $conn->prepare("INSERT INTO tb_schedule (timeSchedule, dateSchedule, idClient, idBarber) VALUES (:timeSchedule, :dateSchedule, :idCliet, :idBarber)");
-        $sql->bindValue('timeSchedule', $time);
-        $sql->bindValue('dateSchedule', $date);
-        $sql->bindValue('idCliet', $_SESSION['idClient']);
-        $sql->bindValue('idBarber', $barber);
-        $sql->execute();
+
+        $stmt = $conn->prepare("INSERT INTO tb_schedule (timeSchedule, dateSchedule, idClient, idBarber) VALUES (:timeSchedule, :dateSchedule, :idCliet, :idBarber)");
+        $stmt->bindValue('timeSchedule', $time);
+        $stmt->bindValue('dateSchedule', $date);
+        $stmt->bindValue('idCliet', $_SESSION['idUser']);
+        $stmt->bindValue('idBarber', $barber);
+        $stmt->execute();
         echo "Dados enviados com sucesso";
     }
 } else {
@@ -37,7 +38,7 @@ if (isset($_SESSION)) {
 
     <main>
         <section>
-            <form action="#" method="post">
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
                 <div>
                     <label for="barber">Escolha o Barbeiro: </label>
                     <select name="barber" id="barber" multiple size="3">

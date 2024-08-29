@@ -26,7 +26,7 @@ try{
         $query->bindValue('passwordClient', $passwordClient);
         $query->execute();
 
-        echo "tudo nos conformes";
+        header("location: ..\..\..\public\clientAccount.php");
     }
     
 }catch(PDOException $e){

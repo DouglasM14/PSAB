@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 22/08/2024 às 02:46
+-- Tempo de geração: 29/08/2024 às 04:16
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `tb_adm` (
 --
 
 INSERT INTO `tb_adm` (`idAdm`, `nameAdm`, `emailAdm`, `passwordAdm`) VALUES
-(1, 'AdmTico', 'admtico', 123456);
+(1, 'AdmTico', 'admtico@karraro.com', 123456);
 
 -- --------------------------------------------------------
 
@@ -63,9 +63,9 @@ CREATE TABLE IF NOT EXISTS `tb_barber` (
 --
 
 INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarber`) VALUES
-(1, 'barberTico', 'barbertico', 123456),
-(2, 'barber1', 'barber1', 123456),
-(3, 'barber2', 'barber2', 123456);
+(1, 'barberTico', 'barbertico@karraro.com', 123456),
+(2, 'barber1', 'barber1@karraro.com', 123456),
+(3, 'barber2', 'barber2@karraro.com', 123456);
 
 -- --------------------------------------------------------
 
@@ -104,22 +104,16 @@ CREATE TABLE IF NOT EXISTS `tb_schedule` (
   PRIMARY KEY (`idSchedule`),
   KEY `idClient` (`idClient`),
   KEY `idBarber` (`idBarber`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Despejando dados para a tabela `tb_schedule`
 --
 
 INSERT INTO `tb_schedule` (`idSchedule`, `timeSchedule`, `dateSchedule`, `idClient`, `idBarber`) VALUES
-(1, '23:00:00', '2024-08-21', 2, 1),
-(2, '23:00:00', '2024-08-21', 2, 1),
-(3, '23:00:00', '2024-08-21', 2, 1),
-(4, '23:00:00', '2024-08-21', 2, 1),
-(5, '23:00:00', '2024-08-21', 2, 1),
-(6, '23:00:00', '2024-08-21', 2, 1),
-(7, '21:25:00', '2024-08-21', 2, 1),
-(8, '21:25:00', '2024-08-21', 2, 1),
-(9, '20:34:00', '2024-08-13', 2, 2);
+(1, '01:10:00', '2024-11-01', 2, 1),
+(2, '02:20:00', '2024-09-02', 2, 2),
+(3, '03:30:00', '2024-09-03', 2, 3);
 
 -- --------------------------------------------------------
 

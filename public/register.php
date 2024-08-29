@@ -27,12 +27,14 @@
 
                 <div>
                     <label for="passwordClient">Senha: </label>
-                    <input type="password" name="passwordClient" id="">
+                    <input type="password" name="passwordClient" id="password">
+                    <span class="toggle-password" onmouseleave="togglePassword('password', '.toggle-password')" onmouseenter="togglePassword('password', '.toggle-password')">👁️</span>
                 </div>
 
                 <div>
                     <label for="password">Repita a senha: </label>
-                    <input type="password" name="password" id="">
+                    <input type="password" name="password" id="password2">
+                    <span class="toggle-password2" onclick="togglePassword('password2', '.toggle-password2')">👁️</span>
                 </div>
 
                 <input type="submit" value="Se cadastrar">
@@ -50,6 +52,8 @@
         <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis 2024</p>
     </Footer>
+
+    <script src="assets/js/showPass.js"></script>
 </body>
 
 </html>
