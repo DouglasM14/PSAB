@@ -12,13 +12,15 @@ if (isset($_POST['email']) || isset($_POST['password'])) {
         $idUser = "id";
         $nameUser = "name";
 
-        if (strpos($email, "@karraro.com") != false) {
-            $query = "SELECT idBarber, nameBarber FROM tb_barber WHERE emailBarber = '$email' AND passwordBarber = '$password' UNION SELECT idAdm, nameAdm FROM tb_adm WHERE emailAdm = '$email' AND passwordAdm = '$password' LIMIT 1;";
+        if (strpos($email, "@karraro.com")) {
+            $query = "SELECT idBarber, nameBarber FROM tb_barber WHERE emailBarber = '$email' AND passwordBarber = '$password' UNION SELECT idAdm, nameAdm FROM tb_adm WHERE emailAdm = '$email' AND passwordAdm = '$password' LIMIT 1";
+
             $idUser .= 'Barber';
             $nameUser .= 'Barber';
             $userPage = "barberAccount.php";
         } else {
             $query = "SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$password' LIMIT 1";
+
             $idUser .= 'Client';
             $nameUser .= 'Client';
             $userPage = "clientAccount.php";

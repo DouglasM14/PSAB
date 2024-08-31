@@ -21,6 +21,9 @@ include_once "../src/config/php/protect.php";
         <h2>Bem vindo <?php echo $_SESSION['nameUser']; ?></h2>
 
         <section>
+            <p>
+                <a href="schedule.php">Visualizar Agenda</a>
+            </p>
 
             <p>
                 <a href="../src/config/php/logout.php">sair</a>

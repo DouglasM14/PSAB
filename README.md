@@ -4,19 +4,19 @@
 
 Lista de Todas as paginas do site: 
 
-Index
-Services
+Index 
+Services 
 
 Login
-Register
-Scheduling (pagina de agendamento)
+Register 
+Scheduling (pagina de agendamento) 
 
 Client acount 
-Scheduling history
+Scheduling history 
 
-Barber acount
-Schedule (agenda do barbeiro)
+Barber acount 
+Schedule (agenda do barbeiro) 
 
-Adm acount
-Barber crud
-Services crud
+Adm acount 
+Barber crud 
+Services crud 
