@@ -1,6 +1,6 @@
 <?php
-include_once "../src/config/php/conection.php";
-include_once "../src/config/php/protect.php";
+require_once "../db/database.php";
+require_once "../src/php/protect.php";
 
 if (isset($_SESSION)) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,7 +19,6 @@ if (isset($_SESSION)) {
 } else {
     echo "Deu ruim";
 }
-
 ?>
 
 <!DOCTYPE html>

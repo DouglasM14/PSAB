@@ -1,3 +1,23 @@
+<?php
+require_once "../db/database.php";
+
+$db = new Database;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $dados = [
+        'nameClient' => $_POST["nameClient"],
+        'emailClient' => $_POST["emailClient"],
+        'passwordClient' => $_POST["passwordClient"]
+    ];
+
+    if ($db->insert('tb_client', $dados)) {
+        echo "Dados inseridos com sucesso!";
+    } else {
+        echo "Erro ao inserir dados.";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -14,7 +34,7 @@
 
     <main>
         <section>
-            <form action="../src/config/php/insert.php" method="POST">
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
                 <div>
                     <label for="nameClient">Nome: </label>
                     <input type="text" name="nameClient" id="">

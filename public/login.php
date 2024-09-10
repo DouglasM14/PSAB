@@ -1,53 +1,26 @@
 <?php
-include_once "../src/config/php/conection.php";
+require_once '../db/database.php';
+require_once '../src/classes/Client.php';
 
-if (isset($_POST['email']) || isset($_POST['password'])) {
-    if (strlen($_POST['email'])  == 0 || strlen($_POST['password']) == 0) {
-        echo "<script>alert('Preencha os campos corretamente')</script>";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $db = new Database;
+
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $user = new User($email, $password);
+    $userType = $user->getUserType();
+
+    if($userType == "barber") {
+        $db->select('tb_barber', '*', "emailBarber = '$email' AND passwordBarber = '$password' LIMIT 1"); 
     } else {
-
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $idUser = "id";
-        $nameUser = "name";
-
-        if (strpos($email, "@karraro.com")) {
-            $query = "SELECT idBarber, nameBarber FROM tb_barber WHERE emailBarber = '$email' AND passwordBarber = '$password' UNION SELECT idAdm, nameAdm FROM tb_adm WHERE emailAdm = '$email' AND passwordAdm = '$password' LIMIT 1";
-
-            $idUser .= 'Barber';
-            $nameUser .= 'Barber';
-            $userPage = "barberAccount.php";
-        } else {
-            $query = "SELECT * FROM tb_client WHERE emailClient = '$email' AND passwordClient = '$password' LIMIT 1";
-
-            $idUser .= 'Client';
-            $nameUser .= 'Client';
-            $userPage = "clientAccount.php";
-        }
-
-        $stmt = $conn->prepare($query);
-        $stmt->execute();
-
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($stmt->rowCount() == 1) {
-
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-
-            $_SESSION['idUser'] = $resultado[$idUser];
-            $_SESSION['nameUser'] = $resultado[$nameUser];
-
-            header('Location:' . $userPage);
-        } else {
-            echo 'Falha ao logar! Email ou senha incorretos';
-        }
+        $db->select('tb_client', '*', "emailClient = '$email' AND passwordClient = '$password' LIMIT 1"); 
     }
 }
 
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 

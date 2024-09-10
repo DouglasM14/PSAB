@@ -1,6 +1,6 @@
 <?php
 require_once "../db/database.php";
-// require_once "../src/php/protect.php";
+require_once "../src/php/protect.php";
 ?>
 
 <!DOCTYPE html>

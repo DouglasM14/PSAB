@@ -1,6 +1,6 @@
 <?php
-include_once "../src/config/php/conection.php";
-include_once "../src/config/php/protect.php";
+require_once "../db/database.php";
+require_once "../src/php/protect.php";
 ?>
 
 <!DOCTYPE html>

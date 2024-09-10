@@ -1,5 +1,5 @@
 <?php
-include_once "../src/config/php/conection.php";
+require_once "../db/database.php";
 
 $stmt = $conn->prepare("SELECT nameService, descriptionService, priceService FROM tb_service");
 $stmt->execute();
