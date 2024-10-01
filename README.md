@@ -4,19 +4,27 @@
 
 Lista de Todas as paginas do site: 
 
-Index 
-Services 
+o que user faz
+    login
+    logut
 
-Login
-Register 
-Scheduling (pagina de agendamento) 
+o que client faz
+    marca horario
+        visualiza horarios disponiveis
+    edita horario
+    edita informações
+    deleta conta
 
-Client acount 
-Scheduling history 
+o que o barbeiro faz
+    visualiza agenda
+    altera agenda
 
-Barber acount 
-Schedule (agenda do barbeiro) 
+o que o adm faz 
+    tudo que o babeiro e mais isso:
+        cadastra barbeiros
+        deleta barbeios
+        edita info dos barbeiros
+        altera agenda dos barbeiros
+        edita serviços 
 
-Adm acount 
-Barber crud 
-Services crud 
+

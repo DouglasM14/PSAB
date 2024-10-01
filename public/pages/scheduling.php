@@ -1,23 +1,15 @@
 <?php
-require_once "../db/database.php";
-require_once "../src/php/protect.php";
+require_once '../../src/php/protect.php';
+require_once '../../src/classes/Client.php';
 
-if (isset($_SESSION)) {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $barber = $_POST['barber'];
-        $time = $_POST['time'];
-        $date = $_POST['date'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $barber = $_POST['barber'];
+    $time = $_POST['time'];
+    $date = $_POST['date'];
 
-        $stmt = $conn->prepare("INSERT INTO tb_schedule (timeSchedule, dateSchedule, idClient, idBarber) VALUES (:timeSchedule, :dateSchedule, :idCliet, :idBarber)");
-        $stmt->bindValue('timeSchedule', $time);
-        $stmt->bindValue('dateSchedule', $date);
-        $stmt->bindValue('idCliet', $_SESSION['idUser']);
-        $stmt->bindValue('idBarber', $barber);
-        $stmt->execute();
-        echo "Dados enviados com sucesso";
-    }
-} else {
-    echo "Deu ruim";
+    $client = new Client($_SESSION['idUser']);
+
+    $schedule = $client->toSchedule($barber, $time, $date);
 }
 ?>
 
@@ -42,8 +34,8 @@ if (isset($_SESSION)) {
                     <label for="barber">Escolha o Barbeiro: </label>
                     <select name="barber" id="barber" multiple size="3">
                         <option value="1">Tico</option>
-                        <option value="2">Barbeiro 1</option>
-                        <option value="3">Barbeiro 2</option>
+                        <option value="2">Daniel</option>
+                        <option value="3">Rari</option>
                     </select>
                 </div>
                 <div>
@@ -66,7 +58,7 @@ if (isset($_SESSION)) {
 
     <Footer>
         <p>Site desenvolvido por Nexiun Technologies</p>
-        <p>Etec de Heliopolis 2024</p>
+        <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
     </Footer>
 </body>
 

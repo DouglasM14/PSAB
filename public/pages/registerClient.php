@@ -1,20 +1,25 @@
 <?php
-require_once "../db/database.php";
-
-$db = new Database;
+// require_once "../../src/php/protect.php";
+require_once "../../src/classes/Client.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $dados = [
-        'nameClient' => $_POST["nameClient"],
-        'emailClient' => $_POST["emailClient"],
-        'passwordClient' => $_POST["passwordClient"]
-    ];
+    $name = $_POST['nameClient'];
+    $email = $_POST['emailClient'];
+    $pass = $_POST['passwordClient'];
 
-    if ($db->insert('tb_client', $dados)) {
-        echo "Dados inseridos com sucesso!";
-    } else {
-        echo "Erro ao inserir dados.";
-    }
+    $client = new Client();
+
+    $register = $client->register($name, $email, $pass);
+
+    echo "<pre>";
+    print_r($register);
+    echo "</pre>";
+
+    // if ($register) {
+    //     header("Location: clientAccount.php");
+    // } else {
+    //     echo "Erro ao inserir dados.";
+    // }
 }
 ?>
 
@@ -53,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div>
                     <label for="password">Repita a senha: </label>
-                    <input type="password" name="password" id="password2">
+                    <input type="password" name="password2" id="password2">
                     <span class="toggle-password2" onclick="togglePassword('password2', '.toggle-password2')">👁️</span>
                 </div>
 
@@ -64,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </section>
 
         <section>
-            <a href="index2.php">Voltar</a>
+            <a href="../index2.php">Voltar</a>
         </section>
     </main>
 
@@ -73,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Etec de Heliopolis 2024</p>
     </Footer>
 
-    <script src="assets/js/showPass.js"></script>
+    <script src="../assets/js/showPass.js"></script>
 </body>
 
 </html>

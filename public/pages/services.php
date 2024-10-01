@@ -1,10 +1,13 @@
 <?php
-require_once "../db/database.php";
+require_once "../../src/classes/Services.php";
 
-$stmt = $conn->prepare("SELECT nameService, descriptionService, priceService FROM tb_service");
-$stmt->execute();
+$service = new Service();
 
-$resultado = $stmt->fetchALL(PDO::FETCH_ASSOC);
+$result = $service->viewAllServices();
+
+// echo "<pre>";
+// echo print_r($result);
+// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -49,12 +52,12 @@ $resultado = $stmt->fetchALL(PDO::FETCH_ASSOC);
                 </tr>
 
                 <?php
-                if (count($resultado) > 0) {
-                    foreach ($resultado as $row) {
+                if (count($result) > 0) {
+                    foreach ($result as $row) {
                         echo "<tr>";
                         echo "<td>" . $row["nameService"] . "</td>";
                         echo "<td>" . $row["descriptionService"] . "</td>";
-                        echo "<td>" . $row["priceService"] . "</td>";
+                        echo "<td>R$" . $row["priceService"] . "</td>";
                         echo "</tr>";
                     }
                 }
@@ -63,7 +66,7 @@ $resultado = $stmt->fetchALL(PDO::FETCH_ASSOC);
         </section>
 
         <section>
-            <p><a href="index2.php">Voltar</a></p>
+            <p><a href="../index2.php">Voltar</a></p>
         </section>
     </main>
 

@@ -7,7 +7,7 @@ class Database
     private $user = 'root';
     private $pass = '';
 
-    public function __construct()
+    public function connect()
     {
         $dsn = "mysql:host={$this->host};dbname={$this->db};charset=utf8";
         try {
@@ -57,14 +57,41 @@ class Database
 
     public function select($table, $columns = "*", $condition = "1")
     {
-        // Monta a query SQL
         $sql = "SELECT $columns FROM $table WHERE $condition";
 
-        // Prepara e executa a query
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-        // Retorna os resultados como um array associativo
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function selectJoin($table, $columns = "*", $joins = "", $condition = "1")
+    {
+        $sql = "SELECT $columns FROM $table $joins WHERE $condition";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function transaction($state)
+    {
+        switch ($state) {
+            case 'start':
+                $this->getPdo()->beginTransaction();
+                break;
+            case 'commit':
+                $this->getPdo()->commit();
+                break;
+            case 'rollBack':
+                $this->getPdo()->rollBack();
+                break;
+        }
+    }
+
+    public function getPdo()
+    {
+        return $this->pdo;
     }
 }
