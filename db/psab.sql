@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 30/09/2024 às 03:44
+-- Tempo de geração: 04-Out-2024 às 22:43
 -- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,21 +26,21 @@ USE `psab`;
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_adm`
---
--- Criação: 29/09/2024 às 23:00
+-- Estrutura da tabela `tb_adm`
 --
 
-CREATE TABLE `tb_adm` (
-  `idAdm` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tb_adm` (
+  `idAdm` int(11) NOT NULL AUTO_INCREMENT,
   `nameAdm` varchar(100) NOT NULL,
   `emailAdm` varchar(75) NOT NULL,
   `passwordAdm` int(32) NOT NULL,
-  `idUser` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-q
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idAdm`),
+  KEY `idUser` (`idUser`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 --
--- Despejando dados para a tabela `tb_adm`
+-- Extraindo dados da tabela `tb_adm`
 --
 
 INSERT INTO `tb_adm` (`idAdm`, `nameAdm`, `emailAdm`, `passwordAdm`, `idUser`) VALUES
@@ -49,21 +49,21 @@ INSERT INTO `tb_adm` (`idAdm`, `nameAdm`, `emailAdm`, `passwordAdm`, `idUser`) V
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_barber`
---
--- Criação: 29/09/2024 às 23:00
+-- Estrutura da tabela `tb_barber`
 --
 
-CREATE TABLE `tb_barber` (
-  `idBarber` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tb_barber` (
+  `idBarber` int(11) NOT NULL AUTO_INCREMENT,
   `nameBarber` varchar(100) NOT NULL,
   `emailBarber` varchar(75) NOT NULL,
   `passwordBarber` int(32) NOT NULL,
-  `idUser` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idBarber`),
+  KEY `idUser` (`idUser`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Despejando dados para a tabela `tb_barber`
+-- Extraindo dados da tabela `tb_barber`
 --
 
 INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarber`, `idUser`) VALUES
@@ -74,47 +74,52 @@ INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarbe
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_client`
---
--- Criação: 29/09/2024 às 23:00
+-- Estrutura da tabela `tb_client`
 --
 
-CREATE TABLE `tb_client` (
-  `idClient` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tb_client` (
+  `idClient` int(11) NOT NULL AUTO_INCREMENT,
   `nameClient` varchar(100) NOT NULL,
   `emailClient` varchar(75) NOT NULL,
   `passwordClient` varchar(32) NOT NULL,
-  `idUser` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Tabela dos clientes da barbearia';
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idClient`),
+  KEY `idUser` (`idUser`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Tabela dos clientes da barbearia';
 
 --
--- Despejando dados para a tabela `tb_client`
+-- Extraindo dados da tabela `tb_client`
 --
 
 INSERT INTO `tb_client` (`idClient`, `nameClient`, `emailClient`, `passwordClient`, `idUser`) VALUES
-(1, 'Douglas', 'douglas@gmail.com', '123', 6),
+(1, 'Douglassa', 'douglas@gmail.com', '1234', 6),
 (2, 'Eduardo', 'eduardo@gmail.com', '123', 5),
 (3, 'Vitor', 'vitor@gmail.com', '123', 8),
-(4, 'Caua', 'caua@gmail.com', '123', 7);
+(4, 'Caua', 'caua@gmail.com', '123', 7),
+(6, 'pedro', 'pedro@gmail.cim', '123', 10),
+(7, 'luis', 'luiz@gmail.com', '123', 11),
+(9, 'edukof', 'edu@gmail.com', '123', 14),
+(10, 'teste', 'teste', '123', 16);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_schedule`
---
--- Criação: 29/09/2024 às 23:00
+-- Estrutura da tabela `tb_schedule`
 --
 
-CREATE TABLE `tb_schedule` (
-  `idSchedule` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tb_schedule` (
+  `idSchedule` int(11) NOT NULL AUTO_INCREMENT,
   `timeSchedule` time NOT NULL,
   `dateSchedule` date NOT NULL,
   `idClient` int(11) NOT NULL,
-  `idBarber` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `idBarber` int(11) NOT NULL,
+  PRIMARY KEY (`idSchedule`),
+  KEY `idClient` (`idClient`),
+  KEY `idBarber` (`idBarber`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Despejando dados para a tabela `tb_schedule`
+-- Extraindo dados da tabela `tb_schedule`
 --
 
 INSERT INTO `tb_schedule` (`idSchedule`, `timeSchedule`, `dateSchedule`, `idClient`, `idBarber`) VALUES
@@ -129,42 +134,43 @@ INSERT INTO `tb_schedule` (`idSchedule`, `timeSchedule`, `dateSchedule`, `idClie
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_service`
---
--- Criação: 29/09/2024 às 23:00
+-- Estrutura da tabela `tb_service`
 --
 
-CREATE TABLE `tb_service` (
-  `idService` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tb_service` (
+  `idService` int(11) NOT NULL AUTO_INCREMENT,
   `nameService` varchar(50) NOT NULL,
-  `descriptionService` varchar(255) NOT NULL,
-  `priceService` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `descService` varchar(255) NOT NULL,
+  `priceService` decimal(12,2) NOT NULL,
+  `expPriceService` decimal(12,2) NOT NULL,
+  PRIMARY KEY (`idService`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Despejando dados para a tabela `tb_service`
+-- Extraindo dados da tabela `tb_service`
 --
 
-INSERT INTO `tb_service` (`idService`, `nameService`, `descriptionService`, `priceService`) VALUES
-(1, 'Corte Básico', 'Um simples corte de cabelo', 12);
+INSERT INTO `tb_service` (`idService`, `nameService`, `descService`, `priceService`, `expPriceService`) VALUES
+(1, 'Corte Básico', 'Um simples corte de cabelo', 30.00, 35.00),
+(2, 'barba', 'Barba bem feita', 25.00, 30.00);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tb_userlogin`
---
--- Criação: 29/09/2024 às 23:00
+-- Estrutura da tabela `tb_userlogin`
 --
 
-CREATE TABLE `tb_userlogin` (
-  `idUser` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tb_userlogin` (
+  `idUser` int(11) NOT NULL AUTO_INCREMENT,
   `emailUser` varchar(255) NOT NULL,
   `passwordUser` varchar(255) NOT NULL,
-  `typeUser` enum('client','barber','adm') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `typeUser` enum('client','barber','adm') NOT NULL,
+  PRIMARY KEY (`idUser`),
+  UNIQUE KEY `emailUser` (`emailUser`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Despejando dados para a tabela `tb_userlogin`
+-- Extraindo dados da tabela `tb_userlogin`
 --
 
 INSERT INTO `tb_userlogin` (`idUser`, `emailUser`, `passwordUser`, `typeUser`) VALUES
@@ -173,120 +179,40 @@ INSERT INTO `tb_userlogin` (`idUser`, `emailUser`, `passwordUser`, `typeUser`) V
 (3, 'tico@gmail.com', '123', 'barber'),
 (4, 'rari@gmail.com', '123', 'barber'),
 (5, 'eduardo@gmail.com', '123', 'client'),
-(6, 'douglas@gmail.com', '123', 'client'),
+(6, 'douglas@gmail.com', '1234', 'client'),
 (7, 'caua@gmail.com', '123', 'client'),
-(8, 'vitor@gmail.com', '123', 'client');
+(8, 'vitor@gmail.com', '123', 'client'),
+(9, 'luis@gmail.cim', '123', 'client'),
+(10, 'pedro@gmail.cim', '123', 'client'),
+(11, 'luiz@gmail.com', '123', 'client'),
+(12, 'edukof@gmail.com', '123', 'client'),
+(14, 'edu@gmail.com', '123', 'client'),
+(16, 'teste', '123', 'client');
 
 --
--- Índices para tabelas despejadas
---
-
---
--- Índices de tabela `tb_adm`
---
-ALTER TABLE `tb_adm`
-  ADD PRIMARY KEY (`idAdm`),
-  ADD KEY `idUser` (`idUser`);
-
---
--- Índices de tabela `tb_barber`
---
-ALTER TABLE `tb_barber`
-  ADD PRIMARY KEY (`idBarber`),
-  ADD KEY `idUser` (`idUser`);
-
---
--- Índices de tabela `tb_client`
---
-ALTER TABLE `tb_client`
-  ADD PRIMARY KEY (`idClient`),
-  ADD KEY `idUser` (`idUser`);
-
---
--- Índices de tabela `tb_schedule`
---
-ALTER TABLE `tb_schedule`
-  ADD PRIMARY KEY (`idSchedule`),
-  ADD KEY `idClient` (`idClient`),
-  ADD KEY `idBarber` (`idBarber`);
-
---
--- Índices de tabela `tb_service`
---
-ALTER TABLE `tb_service`
-  ADD PRIMARY KEY (`idService`);
-
---
--- Índices de tabela `tb_userlogin`
---
-ALTER TABLE `tb_userlogin`
-  ADD PRIMARY KEY (`idUser`),
-  ADD UNIQUE KEY `emailUser` (`emailUser`);
-
---
--- AUTO_INCREMENT para tabelas despejadas
+-- Restrições para despejos de tabelas
 --
 
 --
--- AUTO_INCREMENT de tabela `tb_adm`
---
-ALTER TABLE `tb_adm`
-  MODIFY `idAdm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de tabela `tb_barber`
---
-ALTER TABLE `tb_barber`
-  MODIFY `idBarber` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de tabela `tb_client`
---
-ALTER TABLE `tb_client`
-  MODIFY `idClient` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de tabela `tb_schedule`
---
-ALTER TABLE `tb_schedule`
-  MODIFY `idSchedule` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT de tabela `tb_service`
---
-ALTER TABLE `tb_service`
-  MODIFY `idService` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de tabela `tb_userlogin`
---
-ALTER TABLE `tb_userlogin`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- Restrições para tabelas despejadas
---
-
---
--- Restrições para tabelas `tb_adm`
+-- Limitadores para a tabela `tb_adm`
 --
 ALTER TABLE `tb_adm`
   ADD CONSTRAINT `tb_adm_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `tb_userlogin` (`idUser`);
 
 --
--- Restrições para tabelas `tb_barber`
+-- Limitadores para a tabela `tb_barber`
 --
 ALTER TABLE `tb_barber`
   ADD CONSTRAINT `tb_barber_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `tb_userlogin` (`idUser`);
 
 --
--- Restrições para tabelas `tb_client`
+-- Limitadores para a tabela `tb_client`
 --
 ALTER TABLE `tb_client`
   ADD CONSTRAINT `tb_client_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `tb_userlogin` (`idUser`);
 
 --
--- Restrições para tabelas `tb_schedule`
+-- Limitadores para a tabela `tb_schedule`
 --
 ALTER TABLE `tb_schedule`
   ADD CONSTRAINT `tb_schedule_ibfk_1` FOREIGN KEY (`idClient`) REFERENCES `tb_client` (`idClient`),

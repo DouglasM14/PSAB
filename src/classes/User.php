@@ -61,25 +61,6 @@ class User extends Database
         session_destroy();
     }
 
-    public function deleteAccount()
-    {
-        switch ($this->getTypeUser()) {
-            case 'client':
-                $table = 'tb_client';
-                break;
-            case 'barber':
-                $table = 'tb_barber';
-                break;
-            case 'adm':
-                $table = 'tb_adm';
-                break;
-        };
-
-        $deleteTypeUser = $this->delete($table, "idUser = '{$this->getIdUser()}'");
-
-        $deleteUser = $this->delete('tb_userLogin' ,"idUser = '{$this->getIdUser()}'");
-    }
-
     public function getEmail()
     {
         return $this->email;

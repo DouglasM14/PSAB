@@ -3,7 +3,10 @@ if(!isset($_SESSION)){
     session_start();
 }
 
-if(!isset($_SESSION['idUser'])){
-    header('location: index2.php');
-    die();
+function verifyLogin($typeUser) {
+
+    if($_SESSION['typeUser'] != $typeUser){
+        header('location: ../../public/index2.php');
+        die();
+    }
 }

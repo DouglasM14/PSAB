@@ -1,13 +1,10 @@
 <?php
 require_once "../../src/classes/Services.php";
 
-$service = new Service();
+$service = new Services();
 
 $result = $service->viewAllServices();
 
-// echo "<pre>";
-// echo print_r($result);
-// echo "</pre>";
 ?>
 
 <!DOCTYPE html>

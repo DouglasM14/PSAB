@@ -1,22 +1,23 @@
 <?php
-// require_once "../../src/php/protect.php";
-require_once "../../src/classes/Client.php";
+require_once "../../src/php/protect.php";
+require_once "../../src/classes/Barber.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['nameClient'];
-    $email = $_POST['emailClient'];
-    $pass = $_POST['passwordClient'];
+    $name = $_POST['nameBarber'];
+    $email = $_POST['emailBarber'];
+    $pass = $_POST['passwordBarber'];
+    $photo = $_POST['photoBarber'];
 
-    $client = new Client();
+    $barber = new Barber($_SESSION['idBarber']);
 
-    $register = $client->registerClient($name, $email, $pass);
+    $register = $barber->registerBarber($name, $email, $pass);
 
-    echo "<pre>";
-    print_r($register);
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($register);
+    // echo "</pre>";
 
     // if ($register) {
-    //     header("Location: clientAccount.php");
+    //     header("Location: BarberAccount.php");
     // } else {
     //     echo "Erro ao inserir dados.";
     // }
@@ -34,38 +35,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <header>
-        <h1>PSAB - Registrar cliente</h1>
+        <h1>PSAB - Registrar Barbeiro</h1>
     </header>
 
     <main>
         <section>
             <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
                 <div>
-                    <label for="nameClient">Nome: </label>
-                    <input type="text" name="nameClient" id="">
+                    <label for="nameBarber">Nome: </label>
+                    <input type="text" name="nameBarber" id="">
                 </div>
 
                 <div>
-                    <label for="emailClient">Email: </label>
-                    <input type="text" name="emailClient" id="">
+                    <label for="emailBarber">Email: </label>
+                    <input type="text" name="emailBarber" id="">
                 </div>
 
+                
+                <!-- <div>
+                    <label for="emailBarber">Agenda: </label>
+                    <input type="text" name="emailBarber" id="">
+                </div> -->
+                
                 <div>
-                    <label for="passwordClient">Senha: </label>
-                    <input type="password" name="passwordClient" id="password">
+                    <label for="passwordBarber">Senha: </label>
+                    <input type="password" name="passwordBarber" id="password">
                     <span class="toggle-password" onmouseleave="togglePassword('password', '.toggle-password')" onmouseenter="togglePassword('password', '.toggle-password')">👁️</span>
                 </div>
-
+                
                 <div>
                     <label for="password">Repita a senha: </label>
                     <input type="password" name="password2" id="password2">
                     <span class="toggle-password2" onclick="togglePassword('password2', '.toggle-password2')">👁️</span>
                 </div>
+                
+                <div>
+                    <label for="photoBarber">Foto: </label>
+                    <input type="file" name="photoBarber" id="">
+                </div>
 
-                <input type="submit" value="Se cadastrar">
+                <input type="submit" value="Cadastrar">
             </form>
-
-            <p>Já tem uma conta? <a href="login.php">Entre.</a></p>
         </section>
 
         <section>

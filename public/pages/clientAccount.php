@@ -2,13 +2,26 @@
 require_once "../../src/php/protect.php";
 require_once "../../src/classes/Client.php";
 
+verifyLogin('client');
+
 $client = new Client($_SESSION['idUser']);
 
 $result = $client->viewSchedule();
 
-    // echo "<pre>";
-    // print_r($result);
-    // echo "</pre>";
+// echo "<pre>";
+// print_r($teste);
+// echo "</pre>";
+
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $name = $_POST['nameClient'];
+    $email = $_POST['emailClient'];
+    $pass = $_POST['passwordClient'];
+
+    $updateMsg = $client->updateClient($name, $email, $pass, $_SESSION['idUser']);
+
+    echo $updateMsg;
+}
 
 ?>
 
@@ -44,7 +57,7 @@ $result = $client->viewSchedule();
     </header>
 
     <main>
-        <h2>Bem vindo <?php echo $client->getNameClient(); ?></h2>
+        <h2>Bem vindo <?php echo $client->getNameClient() ?></h2>
 
         <section>
             <p>
@@ -62,7 +75,32 @@ $result = $client->viewSchedule();
             <p>
                 <a href="../../src/php/logout.php">sair</a>
             </p>
+        </section>
 
+        <section>
+            <h2>Editar informações</h2>
+
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
+                <div>
+                    <label for="">Nome:</label>
+                    <input name="nameClient" value="<?php echo $client->getNameClient() ?>" type="text">
+                </div>
+
+                <div>
+                    <label for="">Email:</label>
+                    <input name="emailClient" value="<?php echo $client->getEmailClient() ?>" type="text">
+                </div>
+
+                <div>
+                    <label for="">Senha:</label>
+                    <input name="passwordClient" value="<?php echo $client->getPasswordClient() ?>" type="text">
+                </div>
+
+                <div>
+                    <button type="submit">Alterar</button>
+                </div>
+
+            </form>
         </section>
 
         <section>

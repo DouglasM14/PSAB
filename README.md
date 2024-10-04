@@ -1,6 +1,9 @@
 # PSAB
  Prototipo de um Sistema de Agendamento para Barbearia
 
+Coisas para resolver dps, Sim é pra resolver dps.
+    - fazer os reurn dos select não serem mais matriz arrays 
+    - arrumar o transction no update de client
 
 Lista de Todas as paginas do site: 
 
@@ -25,6 +28,6 @@ o que o adm faz
         deleta barbeios
         edita info dos barbeiros
         altera agenda dos barbeiros
-        edita serviços 
+        edita serviços
 
 

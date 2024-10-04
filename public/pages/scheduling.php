@@ -2,6 +2,8 @@
 require_once '../../src/php/protect.php';
 require_once '../../src/classes/Client.php';
 
+verifyLogin('client');
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $barber = $_POST['barber'];
     $time = $_POST['time'];

@@ -2,6 +2,8 @@
 require_once "../../src/php/protect.php";
 require_once "../../src/classes/Barber.php";
 
+verifyLogin('barber');
+
 $barber = new Barber($_SESSION['idUser']);
 $result = $barber->viewSchedule();
 
