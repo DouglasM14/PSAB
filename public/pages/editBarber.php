@@ -11,13 +11,13 @@ if (isset($_GET["a"])) {
     $barber = new Barber($_SESSION["idBarber"], 'barber');
 }
 
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $name = $_POST["nameBarber"];
     $email = $_POST["emailBarber"];
     $pass = $_POST["passwordBarber"];
-    
+
     $resultMsg = $barber->updateBarber($name, $email, $pass);
-    
+
     echo "<pre>";
     print_r($resultMsg);
     echo "</pre>";
@@ -63,13 +63,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
                     <!-- <div>
                         <label for="">Preço:</label>
-                        <input name="priceBarber" value="<?php 
-                        // echo $barber->getImageBarber() ?>" type="file">
+                        <input name="priceBarber" value="<?php
+                                                            // echo $barber->getImageBarber() 
+                                                            ?>" type="file">
                     </div> -->
 
-                    <button type="submit">Editar</button>
-
+                    <div>
+                        <button type="submit">Editar</button>
+                    </div>
                 </form>
+            </section>
+
+            <section>
+                <p>
+                    <a href="admAccount.php">Voltar</a>
+                </p>
             </section>
         </main>
 

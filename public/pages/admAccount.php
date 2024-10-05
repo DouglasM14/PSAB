@@ -55,10 +55,6 @@ if (isset($_SESSION['msg'])) {
 
         <section>
             <p>
-                <a href="registerBarber.php">Adcione um Barbeiro</a>
-            </p>
-
-            <p>
                 <a href="../../src/php/logout.php">sair</a>
             </p>
 
@@ -87,6 +83,9 @@ if (isset($_SESSION['msg'])) {
                 }
                 ?>
             </table>
+            <p>
+                <a href="registerBarber.php">Adcione um Barbeiro</a>
+            </p>
         </section>
 
         <section>
@@ -115,7 +114,9 @@ if (isset($_SESSION['msg'])) {
                 }
                 ?>
             </table>
-            
+            <p>
+                <a href="insertService.php">Adcione um Serviço</a>
+            </p>
         </section>
     </main>
 

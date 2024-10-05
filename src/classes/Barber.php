@@ -93,8 +93,7 @@ class Barber extends Database
 
             $this->transaction('commit');
 
-            return $appointments;
-            // header("location: ../../public/pages/admAccount.php");
+            return " A conta do Barbeiro {$this->getNameBarber()} foi excluida com Sucesso!";
         } catch (Exception $e) {
             $this->transaction('rollBack');
             return 'Erro ao apagar a conta: ' . $e->getMessage();

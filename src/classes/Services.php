@@ -14,6 +14,7 @@ class Services extends Database
         $this->connect();
         if ($id != '') {
             $query = $this->select("tb_service", "*", "idService = '{$id}'");
+            $this->setIdService($query[0]['idService']);
             $this->setNameService($query[0]['nameService']);
             $this->setdescService($query[0]['descService']);
             $this->setPriceService($query[0]['priceService']);
@@ -35,6 +36,28 @@ class Services extends Database
     //     $this->setPriceService($query[0]['priceService']);
     //     $this->setExpPriceService($query[0]['expPriceService']);
     // }
+
+    public function insertService($name, $desc, $price, $expPrice) {
+        try {
+            $this->transaction('start');
+
+            $data = [
+                'nameService' => $name,
+                'descService' => $desc,
+                'priceService' => $price,
+                'expPriceService' => $expPrice
+            ];
+
+            $this->insert('tb_service', $data);
+
+            $this->transaction('commit');
+
+            return "Serviço cadastrado com Sucesso!";
+        } catch (Exception $e) {
+            $this->transaction('rollBack');
+            return "Erro ao cadastrar serviço: " . $e->getMessage();
+        }
+    }
 
     public function updateService($chosenId, $name, $desc, $price, $expPrice)
     {
@@ -75,8 +98,20 @@ class Services extends Database
         }
     }
 
-    public function deleteService($id){
+    public function deleteService()
+    {
+        try {
+            $this->transaction('start');
 
+            $this->delete('tb_service', "idService = '{$this->getIdService()}'");
+
+            $this->transaction('commit');
+
+            return "O serviço {$this->getNameService()} foi excluido com Sucesso!";
+        } catch (Exception $e) {
+            $this->transaction('rollBack');
+            return 'Erro ao apagar o serviço: ' . $e->getMessage();
+        }
     }
 
     public function getIdService()

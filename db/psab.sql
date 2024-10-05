@@ -151,8 +151,11 @@ CREATE TABLE IF NOT EXISTS `tb_service` (
 --
 
 INSERT INTO `tb_service` (`idService`, `nameService`, `descService`, `priceService`, `expPriceService`) VALUES
-(1, 'Corte Básico', 'Um simples corte de cabelo', 30.00, 35.00),
-(2, 'barba', 'Barba bem feita', 25.00, 30.00);
+(1, 'Hidratação', 'Descrição muito foda do serviço', 10.00, 15.00),
+(2, 'Perfil', 'Descrição muito foda do serviço', 10.00, 15.00),
+(3, 'Sobrancelha', 'Descrição muito foda do serviço', 10.00, 15.00),
+(4, 'Barba', 'Descrição muito foda do serviço', 30.00, 35.00),
+(5, 'Corte', 'Descrição muito foda do serviço', 30.00, 35.00);
 
 -- --------------------------------------------------------
 

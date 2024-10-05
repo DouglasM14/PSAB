@@ -7,17 +7,14 @@ if ($_SESSION['typeUser'] == 'client') {
     $client = new Client($_SESSION['idUser']);
     $delete = $client->deleteClient($_SESSION['idUser']);
 
-} else if ($_SESSION['typeUser'] == 'barber') {
+} else if ($_SESSION['typeUser'] == 'adm') {
     require_once __DIR__ . '/../classes/Barber.php';
 
     if (isset($_GET["a"])) {
-        $_SESSION['idBarber'] = $_GET["a"];
         $barber = new Barber($_GET["a"], 'barber');
-    } else {
-        $barber = new Barber($_SESSION["idBarber"], 'barber');
+        $deleteMsg = $barber->deleteBarber();
     }
 
-    $delete = $barber->deleteBarber();
+    $_SESSION['msg'] = $deleteMsg;
+    header("location: ../../public/pages/admAccount.php");
 }
-
-// header("location: ../../public/index2.php");
