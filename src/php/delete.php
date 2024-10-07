@@ -7,6 +7,7 @@ if ($_SESSION['typeUser'] == 'client') {
     $client = new Client($_SESSION['idUser']);
     $delete = $client->deleteClient($_SESSION['idUser']);
 
+    header("location: ../../public/index2.php");
 } else if ($_SESSION['typeUser'] == 'adm') {
     require_once __DIR__ . '/../classes/Barber.php';
 

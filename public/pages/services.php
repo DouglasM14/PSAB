@@ -46,6 +46,7 @@ $result = $service->viewAllServices();
                     <th>Serviço</th>
                     <th>Descrição</th>
                     <th>Preço</th>
+                    <th>Preço Fim de Semana</th>
                 </tr>
 
                 <?php
@@ -53,8 +54,9 @@ $result = $service->viewAllServices();
                     foreach ($result as $row) {
                         echo "<tr>";
                         echo "<td>" . $row["nameService"] . "</td>";
-                        echo "<td>" . $row["descriptionService"] . "</td>";
+                        echo "<td>" . $row["descService"] . "</td>";
                         echo "<td>R$" . $row["priceService"] . "</td>";
+                        echo "<td>R$" . $row["expPriceService"] . "</td>";
                         echo "</tr>";
                     }
                 }

@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `tb_client` (
 --
 
 INSERT INTO `tb_client` (`idClient`, `nameClient`, `emailClient`, `passwordClient`, `idUser`) VALUES
-(1, 'Douglassa', 'douglas@gmail.com', '1234', 6),
+(1, 'Douglas', 'douglas@gmail.com', '123', 6),
 (2, 'Eduardo', 'eduardo@gmail.com', '123', 5),
 (3, 'Vitor', 'vitor@gmail.com', '123', 8),
 (4, 'Caua', 'caua@gmail.com', '123', 7),

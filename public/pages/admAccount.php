@@ -93,9 +93,9 @@ if (isset($_SESSION['msg'])) {
             <table>
                 <tr>
                     <th>ID</th>
-                    <th>Serviço</th>
                     <th>Descrição</th>
                     <th>Preço</th>
+                    <th>Preço fim de semana</th>
                     <th></th>
                 </tr>
 
