@@ -57,7 +57,7 @@ if (isset($_SESSION['msg'])) {
             <p>
                 <a href="../../src/php/logout.php">sair</a>
             </p>
-
+            
         </section>
 
         <section>
@@ -93,6 +93,7 @@ if (isset($_SESSION['msg'])) {
             <table>
                 <tr>
                     <th>ID</th>
+                    <th>Serviço</th>
                     <th>Descrição</th>
                     <th>Preço</th>
                     <th>Preço fim de semana</th>

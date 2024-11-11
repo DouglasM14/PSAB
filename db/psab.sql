@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 04-Out-2024 às 22:43
--- Versão do servidor: 10.4.32-MariaDB
--- versão do PHP: 8.2.12
+-- Host: localhost:3306
+-- Tempo de geração: 07-Nov-2024 às 14:55
+-- Versão do servidor: 5.7.33
+-- versão do PHP: 8.0.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `tb_adm` (
   `idUser` int(11) NOT NULL,
   PRIMARY KEY (`idAdm`),
   KEY `idUser` (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_adm`
@@ -57,19 +57,20 @@ CREATE TABLE IF NOT EXISTS `tb_barber` (
   `nameBarber` varchar(100) NOT NULL,
   `emailBarber` varchar(75) NOT NULL,
   `passwordBarber` int(32) NOT NULL,
+  `unavailabilityBarber` json NOT NULL,
   `idUser` int(11) NOT NULL,
   PRIMARY KEY (`idBarber`),
   KEY `idUser` (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_barber`
 --
 
-INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarber`, `idUser`) VALUES
-(1, 'Tico', 'tico@gmail.com', 123, 3),
-(2, 'Daniel', 'daniel@gmail.com', 123, 2),
-(3, 'Rari', 'rari@gmail.com', 123, 4);
+INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarber`, `unavailabilityBarber`, `idUser`) VALUES
+(1, 'Tico', 'tico@gmail.com', 123, '{\"unavailable\": [{\"date\": \"2024-12-25\", \"times\": [\"14:50\"]}, {\"date\": \"2024-12-31\", \"times\": [\"10:00\", \"15:00\"]}]}', 3),
+(2, 'Daniel', 'daniel@gmail.com', 123, 'null', 2),
+(3, 'Rari', 'rari@gmail.com', 123, 'null', 4);
 
 -- --------------------------------------------------------
 
@@ -85,14 +86,14 @@ CREATE TABLE IF NOT EXISTS `tb_client` (
   `idUser` int(11) NOT NULL,
   PRIMARY KEY (`idClient`),
   KEY `idUser` (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Tabela dos clientes da barbearia';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='Tabela dos clientes da barbearia';
 
 --
 -- Extraindo dados da tabela `tb_client`
 --
 
 INSERT INTO `tb_client` (`idClient`, `nameClient`, `emailClient`, `passwordClient`, `idUser`) VALUES
-(1, 'Douglas', 'douglas@gmail.com', '123', 6),
+(1, 'Douglass', 'douglas@gmail.com', '123', 6),
 (2, 'Eduardo', 'eduardo@gmail.com', '123', 5),
 (3, 'Vitor', 'vitor@gmail.com', '123', 8),
 (4, 'Caua', 'caua@gmail.com', '123', 7),
@@ -116,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `tb_schedule` (
   PRIMARY KEY (`idSchedule`),
   KEY `idClient` (`idClient`),
   KEY `idBarber` (`idBarber`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_schedule`
@@ -129,7 +130,9 @@ INSERT INTO `tb_schedule` (`idSchedule`, `timeSchedule`, `dateSchedule`, `idClie
 (6, '05:12:00', '2024-09-07', 4, 1),
 (7, '16:14:00', '2024-09-27', 3, 2),
 (8, '21:16:00', '2024-09-04', 3, 2),
-(9, '10:16:00', '2024-09-14', 3, 3);
+(9, '10:16:00', '2024-09-14', 3, 3),
+(10, '15:40:00', '2024-11-07', 1, 1),
+(11, '15:40:00', '2024-11-07', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -144,18 +147,15 @@ CREATE TABLE IF NOT EXISTS `tb_service` (
   `priceService` decimal(12,2) NOT NULL,
   `expPriceService` decimal(12,2) NOT NULL,
   PRIMARY KEY (`idService`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_service`
 --
 
 INSERT INTO `tb_service` (`idService`, `nameService`, `descService`, `priceService`, `expPriceService`) VALUES
-(1, 'Hidratação', 'Descrição muito foda do serviço', 10.00, 15.00),
-(2, 'Perfil', 'Descrição muito foda do serviço', 10.00, 15.00),
-(3, 'Sobrancelha', 'Descrição muito foda do serviço', 10.00, 15.00),
-(4, 'Barba', 'Descrição muito foda do serviço', 30.00, 35.00),
-(5, 'Corte', 'Descrição muito foda do serviço', 30.00, 35.00);
+(1, 'Corte Básico', 'Um simples corte de cabelo', '30.00', '35.00'),
+(2, 'barba', 'Barba bem feita', '25.00', '30.00');
 
 -- --------------------------------------------------------
 
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `tb_userlogin` (
   `typeUser` enum('client','barber','adm') NOT NULL,
   PRIMARY KEY (`idUser`),
   UNIQUE KEY `emailUser` (`emailUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_userlogin`
@@ -182,7 +182,7 @@ INSERT INTO `tb_userlogin` (`idUser`, `emailUser`, `passwordUser`, `typeUser`) V
 (3, 'tico@gmail.com', '123', 'barber'),
 (4, 'rari@gmail.com', '123', 'barber'),
 (5, 'eduardo@gmail.com', '123', 'client'),
-(6, 'douglas@gmail.com', '1234', 'client'),
+(6, 'douglas@gmail.com', '123', 'client'),
 (7, 'caua@gmail.com', '123', 'client'),
 (8, 'vitor@gmail.com', '123', 'client'),
 (9, 'luis@gmail.cim', '123', 'client'),

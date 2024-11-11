@@ -39,6 +39,13 @@ class Barber extends Database
         return $query;
     }
 
+    public function verifySchedule() {
+        $query = $this->select('tb_barber','idBarber, unavailabilityBarber','1');
+
+        return json_encode($query);
+        // return $query;
+    }
+
     public function registerBarber($name, $email, $password)
     {
         try {
@@ -69,15 +76,13 @@ class Barber extends Database
 
             $this->insert('tb_barber', $dataBarber);
             $this->transaction('commit');
-
-            header("location: admAccount.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');
             return "Erro ao cadastrar Barbeiro: " . $e->getMessage();
         }
     }
 
-    public function deleteBarber()
+    public function deleteBarber($id)
     {
         try {
             $appointments = $this->select("tb_schedule", "*", "idBarber = '{$this->getIdBarber()}'");
@@ -87,13 +92,13 @@ class Barber extends Database
             if (count($appointments) > 0) {
                 throw new Exception('A conta ainda tem horários marcados.');
             } else {
-                $this->delete('tb_barber', "idBarber = '{$this->getIdBarber()}'");
-                $this->delete('tb_userLogin', "idUser = '{$this->getIdUser()}'");
+                $this->delete('tb_barber', "idUser = '{$id}'");
+                $this->delete('tb_userLogin', "idUser = '{$id}'");
             }
 
             $this->transaction('commit');
 
-            return " A conta do Barbeiro {$this->getNameBarber()} foi excluida com Sucesso!";
+            header("location: ../../public/index2.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');
             return 'Erro ao apagar a conta: ' . $e->getMessage();
@@ -105,6 +110,8 @@ class Barber extends Database
         try {
             $dataB = []; // dados alterados para a tabela Barber
             $dataU = []; // dados alterados para a tabela user
+
+            //Eduardo da o cu neide sem calcinha PAAAAAAAAAAAAAAAAA!!!!!
 
             if ($n != $this->getNameBarber()) {
                 $dataB["nameBarber"] = $n;
@@ -149,6 +156,13 @@ class Barber extends Database
             // $this->transaction('rollBack');
             return $e->getMessage();
         }
+    }
+
+
+    public function barberList()
+    {
+        $query = $this->select("tb_barber", "idBarber, nameBarber", "1");
+        return $query;
     }
 
     public function getIdBarber()

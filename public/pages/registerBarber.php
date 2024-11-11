@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="file" name="photoBarber" id="">
                 </div>
 
-                <input type="submit" value="Cadastrar">
+                <input type="submit" value="Se cadastrar">
             </form>
         </section>
 

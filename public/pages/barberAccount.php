@@ -48,9 +48,9 @@ $result = $barber->viewSchedule();
         <h2>Bem vindo <?php echo $barber->getNameBarber() ?></h2>
 
         <section>
-            <!-- <p>
-                <a href="schedule.php">Visualizar Agenda</a>
-            </p> -->
+            <p>
+                <a href="editSchedule.php">Alterar agenda</a>
+            </p>
 
             <p>
                 <a href="../../src/php/logout.php">sair</a>

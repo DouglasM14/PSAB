@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <header>
-        <h1>PSAB - Registrar cliente</h1>
+        <h1>PSAB - Registrar</h1>
     </header>
 
     <main>

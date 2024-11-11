@@ -96,6 +96,7 @@ class Client extends Database
 
             $this->transaction('commit');
             
+            header("location: ../../public/index2.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');
             return 'Erro ao apagar a conta: ' . $e->getMessage();
