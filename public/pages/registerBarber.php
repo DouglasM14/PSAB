@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </section>
 
         <section>
-            <a href="../index2.php">Voltar</a>
+            <a href="admAccount.php">Voltar</a>
         </section>
     </main>
 

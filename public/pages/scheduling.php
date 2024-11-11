@@ -87,44 +87,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script>
         var barberSchedules = <?php echo $barberSchedule ?>
 
-        function getUnavailability(idBarber) {
+        function verifyDaysHoursOff(idBarber, type, value) {
             const barber = barberSchedules.find(b => b.idBarber === idBarber);
-
-            // Convertendo a string JSON para um objeto
             const unavailability = JSON.parse(barber.unavailabilityBarber);
 
-            return unavailability
+            let isUnavailable = null
 
+            console.log(unavailability)
+
+            if (type == 'day') {
+                unavailability.unavailable.forEach(element => {
+                    if (element.times.length == 0 && element.date == value) {
+                        console.log(`não trabalha no dia ${element.date}`);
+                        isUnavailable = true
+                    } else {
+                        // console.log(`tem horario marcado no dia ${element.date}`);
+                        isUnavailable = false
+                    }
+                })
+            } else {
+                unavailability.unavailable.forEach(element => {
+                    if (element.times.length != 0 && element.date == value) {
+                        // console.log(`não trabalha no dia ${element.date}`);
+                    } else {
+                        // console.log(`tem horario marcado no dia ${element.date}`);
+                    }
+                })
+            }
+            return isUnavailable
         }
 
         // Function to get the name of the day of the week in Portuguese
         function getDayOfWeekInPortuguese(dayOfWeek) {
             const daysOfWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
             return daysOfWeek[dayOfWeek];
-        }
-
-        function verifyDaysHoursOff(barber, type, value) {
-            var daysHoursOff = getUnavailability(`${barber}`)
-
-            if (type == 'day') {
-                daysHoursOff.unavailable.forEach(element => {
-                    if (element.times.length == 0 && element.date == value) {
-                        console.log(`não trabalha no dia ${element.date}`);
-                        return true
-                    } else {
-                        // console.log(`tem horario marcado no dia ${element.date}`);
-                    }
-                })
-            } else {
-                daysHoursOff.unavailable.forEach(element => {
-                    if (element.times.length != 0 && element.date == value) {
-                        // console.log(`não trabalha no dia ${element.date}`);
-                        return true
-                    } else { 
-                        // console.log(`tem horario marcado no dia ${element.date}`);
-                    }
-                })
-            }
         }
 
         // Function to generate radio inputs for the next 14 days
@@ -149,25 +145,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 let dayOfWeek = getDayOfWeekInPortuguese(date.getDay());
                 let formattedDate = date.toLocaleDateString("pt-BR");
 
+                // Create the input and label elements
+                let label = document.createElement("label");
+                let radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = "day";
+                radio.value = date.toISOString().split("T")[0]; // Format "YYYY-MM-DD" for the value
+                radio.setAttribute('onclick', `generateInputsHours(this.value, ${barber})`)
+
                 if (dayOfWeek == "Domingo" || verifyDaysHoursOff(barber, 'day', date.toISOString().split("T")[0])) {
-                    console.log('foda');
+                    radio.setAttribute('disabled', 'true')
                 } else {
-                    // Create the input and label elements
-                    let label = document.createElement("label");
-                    let radio = document.createElement("input");
-                    radio.type = "radio";
-                    radio.name = "day";
-                    radio.value = date.toISOString().split("T")[0]; // Format "YYYY-MM-DD" for the value
-                    radio.setAttribute('onclick', `generateInputsHours(this.value, ${barber})`)
 
-                    // Set the label content and append the input
-                    label.appendChild(radio);
-                    label.append(` ${formattedDate} - ${dayOfWeek}`);
-
-                    // Append the label with the radio to the list
-                    daysListDiv.appendChild(label);
-                    daysListDiv.appendChild(document.createElement("br"));
                 }
+                // Set the label content and append the input
+                label.appendChild(radio);
+                label.append(` ${formattedDate} - ${dayOfWeek}`);
+
+                // Append the label with the radio to the list
+                daysListDiv.appendChild(label);
+                daysListDiv.appendChild(document.createElement("br"));
             }
         }
 
