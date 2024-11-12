@@ -7,3 +7,5 @@ $id = $_GET['a'];
 $service = new Services($id);
 
 $service->deleteService();
+
+header('Location: ../../public/pages/admAccount.php');

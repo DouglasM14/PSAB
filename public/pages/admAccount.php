@@ -104,12 +104,13 @@ if (isset($_SESSION['msg'])) {
                 if (count($result) > 0) {
                     foreach ($result as $row) {
                         echo "<tr>";
+                        echo "<td>" . $row["idService"] . "</td>";
                         echo "<td>" . $row["nameService"] . "</td>";
                         echo "<td>" . $row["descService"] . "</td>";
                         echo "<td>R$" . $row["priceService"] . "</td>";
                         echo "<td>R$" . $row["expPriceService"] . "</td>";
-                        echo '<td><a href="editService.php?a=' . $row["idService"] . '">Editar</a></td>';
                         echo '<td><a href="../../src/php/deleteService.php?a=' . $row["idService"] . '">Excluir</a></td>';
+                        echo '<td><a href="editService.php?a=' . $row["idService"] . '">Editar</a></td>';
                         echo "</tr>";
                     }
                 }

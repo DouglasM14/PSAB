@@ -39,8 +39,9 @@ class Barber extends Database
         return $query;
     }
 
-    public function verifySchedule() {
-        $query = $this->select('tb_barber','idBarber, unavailabilityBarber','1');
+    public function verifySchedule()
+    {
+        $query = $this->select('tb_barber', 'idBarber, unavailabilityBarber', 'idBarber = ' . $this->getIdBarber());
 
         return json_encode($query);
         // return $query;
@@ -63,6 +64,13 @@ class Barber extends Database
                 'typeUser' => 'barber'
             ];
 
+            $scheduleDefault = [
+                'unavaible' => [
+                    'date' => "",
+                    'times' => []
+                ]
+            ];
+
             $this->insert('tb_userLogin', $dataLogin);
 
             $lastId = $this->getPdo()->lastInsertId();
@@ -71,34 +79,35 @@ class Barber extends Database
                 'nameBarber' => $name,
                 'emailBarber' => $email,
                 'passwordBarber' => $password,
+                'unavailabilityBarber' => json_encode($scheduleDefault),
                 'idUser' => $lastId
             ];
 
             $this->insert('tb_barber', $dataBarber);
             $this->transaction('commit');
+
+            header("Location: admAccount.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');
             return "Erro ao cadastrar Barbeiro: " . $e->getMessage();
         }
     }
 
-    public function deleteBarber($id)
+    public function deleteBarber()
     {
         try {
-            $appointments = $this->select("tb_schedule", "*", "idBarber = '{$this->getIdBarber()}'");
+            $appointments = $this->select("tb_schedule", "*", "idBarber = '{$this->getIdUser()}'");
 
             $this->transaction('start');
 
             if (count($appointments) > 0) {
                 throw new Exception('A conta ainda tem horários marcados.');
             } else {
-                $this->delete('tb_barber', "idUser = '{$id}'");
-                $this->delete('tb_userLogin', "idUser = '{$id}'");
+                $this->delete('tb_barber', "idUser = '{$this->getIdUser()}'");
+                $this->delete('tb_userLogin', "idUser = '{$this->getIdUser()}'");
             }
 
             $this->transaction('commit');
-
-            header("location: ../../public/index2.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');
             return 'Erro ao apagar a conta: ' . $e->getMessage();
@@ -110,8 +119,6 @@ class Barber extends Database
         try {
             $dataB = []; // dados alterados para a tabela Barber
             $dataU = []; // dados alterados para a tabela user
-
-            //Eduardo da o cu neide sem calcinha PAAAAAAAAAAAAAAAAA!!!!!
 
             if ($n != $this->getNameBarber()) {
                 $dataB["nameBarber"] = $n;
