@@ -61,12 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         <input name="passwordBarber" value="<?php echo $barber->getPasswordBarber() ?>" type="text">
                     </div>
 
-                    <!-- <div>
+                    <div>
                         <label for="">Preço:</label>
-                        <input name="priceBarber" value="<?php
-                                                            // echo $barber->getImageBarber() 
-                                                            ?>" type="file">
-                    </div> -->
+                        <!-- <input name="photoBarber" value="<?php // echo $barber->getImageBarber() ?>" type="file"> -->
+                    </div>
 
                     <div>
                         <button type="submit">Editar</button>
@@ -76,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             <section>
                 <p>
-                    <a href="admAccount.php">Voltar</a>
+                    <a href="barberAccount.php">Voltar</a>
                 </p>
             </section>
         </main>

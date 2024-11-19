@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Tempo de geração: 07-Nov-2024 às 14:55
+-- Tempo de geração: 18-Nov-2024 às 15:41
 -- Versão do servidor: 5.7.33
--- versão do PHP: 8.0.14
+-- versão do PHP: 8.1.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `psab`
 --
-CREATE DATABASE IF NOT EXISTS `psab` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `psab` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `psab`;
 
 -- --------------------------------------------------------
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS `tb_barber` (
 --
 
 INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarber`, `unavailabilityBarber`, `idUser`) VALUES
-(1, 'Tico', 'tico@gmail.com', 123, '{\"unavailable\": [{\"date\": \"2024-12-25\", \"times\": [\"14:50\"]}, {\"date\": \"2024-12-31\", \"times\": [\"10:00\", \"15:00\"]}]}', 3),
-(2, 'Daniel', 'daniel@gmail.com', 123, 'null', 2),
+(1, 'Tico', 'tico@gmail.com', 123, '[{\"date\": \"2024-11-27\", \"times\": [\"14:40\"]}, {\"date\": \"2024-11-28\", \"times\": [\"10:00\", \"15:20\"]}]', 3),
+(2, 'Daniel', 'daniel@gmail.com', 123, '[{\"date\": \"2024-11-20\", \"times\": []}, {\"date\": \"2024-11-21\", \"times\": []}]', 2),
 (3, 'Rari', 'rari@gmail.com', 123, 'null', 4);
 
 -- --------------------------------------------------------
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `tb_client` (
 --
 
 INSERT INTO `tb_client` (`idClient`, `nameClient`, `emailClient`, `passwordClient`, `idUser`) VALUES
-(1, 'Douglass', 'douglas@gmail.com', '123', 6),
+(1, 'Douglas', 'douglas@gmail.com', '123', 6),
 (2, 'Eduardo', 'eduardo@gmail.com', '123', 5),
 (3, 'Vitor', 'vitor@gmail.com', '123', 8),
 (4, 'Caua', 'caua@gmail.com', '123', 7),
@@ -101,6 +101,35 @@ INSERT INTO `tb_client` (`idClient`, `nameClient`, `emailClient`, `passwordClien
 (7, 'luis', 'luiz@gmail.com', '123', 11),
 (9, 'edukof', 'edu@gmail.com', '123', 14),
 (10, 'teste', 'teste', '123', 16);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `tb_operatinghours`
+--
+
+CREATE TABLE IF NOT EXISTS `tb_operatinghours` (
+  `idOperating` int(11) NOT NULL AUTO_INCREMENT,
+  `dayOperating` enum('Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado') NOT NULL,
+  `startOperating` time NOT NULL,
+  `endOperating` time NOT NULL,
+  `stateOperating` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`idOperating`),
+  UNIQUE KEY `dayOperating` (`dayOperating`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `tb_operatinghours`
+--
+
+INSERT INTO `tb_operatinghours` (`idOperating`, `dayOperating`, `startOperating`, `endOperating`, `stateOperating`) VALUES
+(1, 'Segunda-feira', '10:00:00', '20:00:00', 1),
+(2, 'Terça-feira', '10:00:00', '20:00:00', 1),
+(3, 'Quarta-feira', '10:00:00', '20:00:00', 1),
+(4, 'Quinta-feira', '10:00:00', '20:00:00', 1),
+(5, 'Sexta-feira', '10:00:00', '20:00:00', 1),
+(6, 'Sábado', '09:00:00', '22:00:00', 1),
+(7, 'Domingo', '10:00:00', '20:00:00', 0);
 
 -- --------------------------------------------------------
 

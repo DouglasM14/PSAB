@@ -2,6 +2,7 @@
 require_once '../../src/php/protect.php';
 require_once '../../src/classes/Client.php';
 require_once '../../src/classes/Barber.php';
+require_once '../../src/php/operatingHours.php';
 
 verifyLogin('client');
 
@@ -11,9 +12,11 @@ $barberList = $barber->barberList();
 
 $barberSchedule = $barber->verifySchedule();
 
-echo '<pre>';
-print_r($barberSchedule);
-echo '</pre>';
+$listOperating = json_encode(listOperating());
+
+// echo '<pre>';
+// print_r($barberSchedule);
+// echo '</pre>';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $barber = $_POST['barber'];
@@ -85,52 +88,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </Footer>
 
     <script>
-        var barberSchedules = <?php echo $barberSchedule ?>
+        var barberSchedules = <?php echo $barberSchedule ?>;
+        var listOperating = <?php echo $listOperating ?>;
 
-        function verifyDaysHoursOff(idBarber, type, value) {
+        function verifyDaysHoursOff(idBarber, type, day, hour) {
             const barber = barberSchedules.find(b => b.idBarber === idBarber);
             const unavailability = JSON.parse(barber.unavailabilityBarber);
 
-            let isUnavailable = null
-
-            console.log(unavailability)
+            let isUnavailable = false
 
             if (type == 'day') {
-                unavailability.unavailable.forEach(element => {
-                    if (element.times.length == 0 && element.date == value) {
-                        console.log(`não trabalha no dia ${element.date}`);
+                unavailability.forEach(element => {
+                    if (element.times.length == 0 && element.date == day) {
+                        // console.log(`não trabalha no dia ${element.date}`);
                         isUnavailable = true
-                    } else {
-                        // console.log(`tem horario marcado no dia ${element.date}`);
-                        isUnavailable = false
                     }
                 })
-            } else {
-                unavailability.unavailable.forEach(element => {
-                    if (element.times.length != 0 && element.date == value) {
+            } else if (type = 'time') {
+                unavailability.forEach(element => {
+                    if (element.times.length != 0 && element.date == day && element.times.find(i => i == hour)) {
+                        isUnavailable = true
                         // console.log(`não trabalha no dia ${element.date}`);
-                    } else {
-                        // console.log(`tem horario marcado no dia ${element.date}`);
                     }
                 })
             }
             return isUnavailable
         }
 
-        // Function to get the name of the day of the week in Portuguese
-        function getDayOfWeekInPortuguese(dayOfWeek) {
+        function generateDaysPortuguese(i) {
             const daysOfWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
-            return daysOfWeek[dayOfWeek];
+            return daysOfWeek[i]
         }
 
         // Function to generate radio inputs for the next 14 days
         function generateInputsDays(barber) {
+
             const daysListDiv = document.getElementById("daysList");
             const hoursListDiv = document.getElementById("hoursList");
 
             // Clear previous content
             daysListDiv.innerHTML = "";
             hoursListDiv.innerHTML = "";
+
 
             // Current system date
             let currentDate = new Date();
@@ -142,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 date.setDate(currentDate.getDate() + i);
 
                 // Format the date and the day of the week
-                let dayOfWeek = getDayOfWeekInPortuguese(date.getDay());
+                let dayOfWeek = generateDaysPortuguese(date.getDay())
                 let formattedDate = date.toLocaleDateString("pt-BR");
 
                 // Create the input and label elements
@@ -153,18 +152,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 radio.value = date.toISOString().split("T")[0]; // Format "YYYY-MM-DD" for the value
                 radio.setAttribute('onclick', `generateInputsHours(this.value, ${barber})`)
 
-                if (dayOfWeek == "Domingo" || verifyDaysHoursOff(barber, 'day', date.toISOString().split("T")[0])) {
+                if (listOperating.find(l => l.dayOperating === dayOfWeek) === undefined || verifyDaysHoursOff(barber, 'day', date.toISOString().split("T")[0])) {
                     radio.setAttribute('disabled', 'true')
-                } else {
-
                 }
+
                 // Set the label content and append the input
                 label.appendChild(radio);
-                label.append(` ${formattedDate} - ${dayOfWeek}`);
+                label.append(` ${formattedDate} - ${dayOfWeek}`)
 
                 // Append the label with the radio to the list
                 daysListDiv.appendChild(label);
-                daysListDiv.appendChild(document.createElement("br"));
+                daysListDiv.appendChild(document.createElement("br"))
             }
         }
 
@@ -172,29 +170,105 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             const hoursListDiv = document.getElementById("hoursList");
             hoursListDiv.innerHTML = "";
 
-            let schedule = ["14:50", "15:40", "15:30"]
+            let date = new Date(day + 'T00:00:00');
+            let dayOfWeek = generateDaysPortuguese(date.getDay())
+
+
+            let schedule = generateSchedule(dayOfWeek)
 
             schedule.forEach(element => {
-                if (element == "14:50") {
-                    console.log('foda');
-                } else {
-                    // Create the input and label elements
-                    let label = document.createElement("label");
-                    let radio = document.createElement("input");
-                    radio.type = "radio";
-                    radio.name = "hour";
-                    radio.value = element
+                // Create the input and label elements
+                let label = document.createElement("label")
+                let radio = document.createElement("input")
+                radio.type = "radio"
+                radio.name = "hour"
+                radio.value = element
 
-                    // Set the label content and append the input
-                    label.appendChild(radio);
-                    label.append(`${element}`);
-
-                    // Append the label with the radio to the list
-                    hoursListDiv.appendChild(label);
-                    hoursListDiv.appendChild(document.createElement("br"));
+                if (verifyDaysHoursOff(barber, 'time', day, element)) {
+                    radio.setAttribute('disabled', 'true')
                 }
+
+                // Set the label content and append the input
+                label.appendChild(radio)
+                label.append(`${element}`)
+
+                // Append the label with the radio to the list
+                hoursListDiv.appendChild(label);
+                hoursListDiv.appendChild(document.createElement("br"))
             });
         }
+
+        // Função para criar uma lista de horários com intervalos de 50 minutos
+        function generateSchedule(dayWeek) {
+            let schedule = []
+
+            let list = listOperating.find(d => d.dayOperating == dayWeek);
+
+            // Converte os horários para objetos Date para manipulação
+            let [startHour, startMinute] = list.startOperating.split(':').map(Number);
+            let [endHour, endMinute] = list.endOperating.split(':').map(Number);
+
+            let hour = startHour;
+            let minutes = startMinute;
+
+            // Cria o horário até atingir o horário de fim
+            while (hour < endHour || (hour === endHour && minutes < endMinute)) {
+                schedule.push(`${String(hour).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`);
+
+                // Incrementa o tempo em 50 minutos
+                minutes += 40;
+                if (minutes >= 60) {
+                    minutes -= 60;
+                    hour += 1;
+                }
+            }
+            return schedule;
+        }
+
+        function getDayMarked() {
+            // Crie um objeto XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+
+            // Configure a requisição para o script PHP
+            xhr.open("POST", "../../src/php/getBarbers.php", true);
+
+            // Defina o que fazer quando a resposta for recebida
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    try {
+                        // Parseia os dados recebidos
+                        var barbers = JSON.parse(xhr.responseText);
+
+                        // Verifica se há um erro
+                        if (barbers.error) {
+                            console.error("Erro: " + barbers.error);
+                        } else {
+                            // Faça algo com os dados dos barbeiros
+                            console.log("Barbeiros encontrados:", barbers);
+                            // Aqui você pode atualizar a interface do usuário ou realizar outras ações
+                        }
+                    } catch (e) {
+                        console.error("Erro ao processar a resposta: ", e);
+                    }
+                }
+            };
+
+            fetch("../../src/php/getBarbers.php",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-ww-form-urlencondede"
+                },
+                body: `idClient=${encodeURIComponent(<?php echo $client->getIdClient();?>)}`
+            })
+            .then(response => response.text())
+            // .then()
+            console.log(response);
+            
+            // Envie a requisição
+            xhr.send();
+        }
+
+        addEventListener("load", getDayMarked())
     </script>
 </body>
 

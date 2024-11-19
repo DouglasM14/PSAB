@@ -31,3 +31,18 @@ o que o adm faz
         edita serviços
 
 
+dias e horas indisponiveis barbeiros
+
+dias de funcionamento da barbearia com os horarios
+
+se o horario escolhido está disponivel na agenda do barbeiro - AJAX pq tem o dia e a hora escolhida
+
+to do: 
+
+fazer o sistema de horarios disponiveis funcionar, começando por:
+
+-Desabilitador por já ter um hórario marcado
+js <> AJAX <> php
+
+-Marcar o horario do cliente com sucesso
+html enviar formulario com sucesso

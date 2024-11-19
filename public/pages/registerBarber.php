@@ -15,12 +15,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // echo "<pre>";
     // print_r($register);
     // echo "</pre>";
-
-    // if ($register) {
-    //     header("Location: BarberAccount.php");
-    // } else {
-    //     echo "Erro ao inserir dados.";
-    // }
 }
 ?>
 
@@ -51,24 +45,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" name="emailBarber" id="">
                 </div>
 
-                
                 <!-- <div>
                     <label for="emailBarber">Agenda: </label>
                     <input type="text" name="emailBarber" id="">
                 </div> -->
-                
+
                 <div>
                     <label for="passwordBarber">Senha: </label>
                     <input type="password" name="passwordBarber" id="password">
                     <span class="toggle-password" onmouseleave="togglePassword('password', '.toggle-password')" onmouseenter="togglePassword('password', '.toggle-password')">👁️</span>
                 </div>
-                
+
                 <div>
                     <label for="password">Repita a senha: </label>
                     <input type="password" name="password2" id="password2">
                     <span class="toggle-password2" onclick="togglePassword('password2', '.toggle-password2')">👁️</span>
                 </div>
-                
+
                 <div>
                     <label for="photoBarber">Foto: </label>
                     <input type="file" name="photoBarber" id="">

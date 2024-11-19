@@ -6,12 +6,14 @@ verifyLogin('barber');
 
 $barber = new Barber($_SESSION['idUser']);
 
+$barberSchedule = json_decode($barber->verifySchedule());
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     # code...
 }
 
 // echo "<pre>";
-// print_r($result);
+// print_r($barberSchedule);
 // echo "</pre>";
 
 ?>
@@ -61,10 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         <div>
                             <h3>Alterar dias de trabalho:</h3>
                             <?php
-                            if (count($barberDays) > 0) {
-                                foreach ($barberDays as $b) {
-                                    echo '<input type="radio" value="' . htmlspecialchars($b['idBarber']) . '" name="workDays">';
-                                    echo `<label>` . htmlspecialchars($b['nameBarber']) . `</label>`;
+
+                            foreach ($barberSchedule as $obj) {
+                                $unavailability = json_decode($obj->unavailabilityBarber, true);
+
+                                foreach ($unavailability['unavailable'] as $item) {
+                                    $date = $item['date'];
+                                    echo "<input type='checkbox' name='unavailability' value='$date' true> $date <br>";
+
+                                    foreach ($item['times'] as $time) {
+                                        echo "<input type='checkbox' name='unavailability' value='$date $time' true>  $time<br>";
+                                    }
                                 }
                             }
                             ?>
