@@ -1,22 +1,26 @@
-<?php 
-require_once '../../db/Database.php';
-require_once '../../src/classes/Client.php';
+<?php
+require_once __DIR__ . '/../../db/Database.php';
 
 try {
+    // Instancia e conecta ao banco de dados
     $db = new Database();
     $db->connect();
 
-    $client = new Client();
-    
-    // Favor não julgar tava adaptando esse select
-    $query = $db->selectJoin(
-        "tb_schedule",
-        "dateSchedule, timeSchedule",
-        "INNER JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
-        "idClient = '{$client->getIdClient()}'
-        ");
-    
-    echo json_encode($query);
+    // Captura o ID do barbeiro e a data selecionada enviados via POST
+    $barberId = isset($_POST['barberId']) ? $_POST['barberId'] : null;
+    $selectedDate = isset($_POST['selectedDate']) ? $_POST['selectedDate'] : null;
+
+    if ($barberId && $selectedDate) {
+        $query = $db->select(
+            "tb_schedule",
+            "timeSchedule",
+            "idBarber = '{$barberId}' AND dateSchedule = '{$selectedDate}'"
+        );
+
+        echo json_encode($query);
+    } else {
+        echo json_encode(['error' => 'Barber ID ou Data não fornecidos']);
+    }
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
 }

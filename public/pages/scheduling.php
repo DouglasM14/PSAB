@@ -173,8 +173,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             let date = new Date(day + 'T00:00:00');
             let dayOfWeek = generateDaysPortuguese(date.getDay())
 
-
             let schedule = generateSchedule(dayOfWeek)
+
+            let dayMarked = getDayMarked(barber, day)
+            console.log(dayMarked);
 
             schedule.forEach(element => {
                 // Create the input and label elements
@@ -225,51 +227,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             return schedule;
         }
 
-        function getDayMarked() {
-            // Crie um objeto XMLHttpRequest
-            var xhr = new XMLHttpRequest();
-
-            // Configure a requisição para o script PHP
-            xhr.open("POST", "../../src/php/getBarbers.php", true);
-
-            // Defina o que fazer quando a resposta for recebida
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    try {
-                        // Parseia os dados recebidos
-                        var barbers = JSON.parse(xhr.responseText);
-
-                        // Verifica se há um erro
-                        if (barbers.error) {
-                            console.error("Erro: " + barbers.error);
-                        } else {
-                            // Faça algo com os dados dos barbeiros
-                            console.log("Barbeiros encontrados:", barbers);
-                            // Aqui você pode atualizar a interface do usuário ou realizar outras ações
-                        }
-                    } catch (e) {
-                        console.error("Erro ao processar a resposta: ", e);
-                    }
-                }
+        function getDayMarked(barberId, selectedDate) {
+            var formData = {
+                barberId: barberId,
+                selectedDate: selectedDate
             };
 
-            fetch("../../src/php/getBarbers.php",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-ww-form-urlencondede"
+            return $.ajax({
+                url: "../../src/php/getBarbers.php",
+                type: "POST",
+                data: formData,
+                dataType: "json", // Indica que esperamos um JSON como resposta
+                success: function(data) {
+                    return data; // Os dados já estarão analisados como JSON
                 },
-                body: `idClient=${encodeURIComponent(<?php echo $client->getIdClient();?>)}`
-            })
-            .then(response => response.text())
-            // .then()
-            console.log(response);
-            
-            // Envie a requisição
-            xhr.send();
+                error: function(textStatus, errorThrown) {
+                    console.error("Erro na requisição AJAX:", textStatus);
+                    throw new Error(textStatus); // Lança um erro para o tratamento posterior
+                }
+            });
         }
-
-        addEventListener("load", getDayMarked())
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </body>
 
 </html>
