@@ -44,7 +44,12 @@ class Barber extends Database
         $query = $this->select('tb_barber', 'idBarber, unavailabilityBarber', '1');
 
         return json_encode($query);
-        // return $query;
+    }
+
+    public function getSchedule(){
+        $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = {$this->getIdBarber()}");
+
+        return json_encode($query);
     }
 
     public function registerBarber($name, $email, $password)
