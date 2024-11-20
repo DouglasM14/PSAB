@@ -41,8 +41,5 @@ to do:
 
 fazer o sistema de horarios disponiveis funcionar, começando por:
 
--Desabilitador por já ter um hórario marcado
-js <> AJAX <> php
-
--Marcar o horario do cliente com sucesso
-html enviar formulario com sucesso
+Verificar o horário pra sabr ja passou ou n
+<>JS

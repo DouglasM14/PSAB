@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        function generateInputsHours(day, barber) {
+        async function generateInputsHours(day, barber) {
             const hoursListDiv = document.getElementById("hoursList");
             hoursListDiv.innerHTML = "";
 
@@ -174,9 +174,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             let dayOfWeek = generateDaysPortuguese(date.getDay())
 
             let schedule = generateSchedule(dayOfWeek)
+            let dayMarked = await getDayMarked(barber, day);
 
-            let dayMarked = getDayMarked(barber, day)
-            console.log(dayMarked);
+            const actualDay = (element) => {
+                let time = new Date(); // Hora atual
+                let today = time.toISOString().split("T")[0]; 
+
+                if (today === day) {
+                    let [hour, minute] = element.split(":").map(Number); 
+                    let now = time.getHours() * 60 + time.getMinutes(); 
+                    let scheduleTime = hour * 60 + minute;
+                    return scheduleTime <= now; 
+                }
+                return false;
+            };
 
             schedule.forEach(element => {
                 // Create the input and label elements
@@ -186,7 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 radio.name = "hour"
                 radio.value = element
 
-                if (verifyDaysHoursOff(barber, 'time', day, element)) {
+                if (verifyDaysHoursOff(barber, 'time', day, element) || dayMarked.includes(element) || actualDay(element)) {
                     radio.setAttribute('disabled', 'true')
                 }
 
@@ -228,27 +239,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         function getDayMarked(barberId, selectedDate) {
-            var formData = {
-                barberId: barberId,
-                selectedDate: selectedDate
-            };
+            let formData = new FormData();
+            formData.append('barberId', barberId);
+            formData.append('selectedDate', selectedDate);
 
-            return $.ajax({
-                url: "../../src/php/getBarbers.php",
-                type: "POST",
-                data: formData,
-                dataType: "json", // Indica que esperamos um JSON como resposta
-                success: function(data) {
-                    return data; // Os dados já estarão analisados como JSON
-                },
-                error: function(textStatus, errorThrown) {
-                    console.error("Erro na requisição AJAX:", textStatus);
-                    throw new Error(textStatus); // Lança um erro para o tratamento posterior
-                }
-            });
+            return fetch('../../src/php/getBarbers.php', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    return data;
+                })
+                .catch(error => {
+                    console.error('Erro na requisição AJAX:', error);
+                    throw error; // Lança o erro para o tratamento posterior
+                });
         }
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </body>
 
 </html>
