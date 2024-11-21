@@ -43,12 +43,12 @@ echo "</pre>";
 
                 <div>
                     <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
-                        <div id="daysOff" onload="generateInputsDaysOff()">
+                        <div id="daysList" onload="generateInputsDaysOff()">
                             <h3>Alterar dias de trabalho:</h3>
+                            <div id="daysOff"></div>
 
                         </div>
 
-                        <div id="hoursList"></div>
 
                     </form>
                 </div>
@@ -63,90 +63,50 @@ echo "</pre>";
     </footer>
 
     <script>
-        function generateInputsDaysOff() {
-            const hoursList = document.getElementById('hoursList')
-            hoursList.innerHTML = ''
+        const daysListDiv = document.getElementById('daysList');
+        const daysOffDiv = document.getElementById('daysOff');
+        const barber = <?= $barber->getIdBarber() ?>
 
-            let date = new Date(day + 'T00:00:00');
+        function displayUnavailability(dates) {
+            if (dates.length > 0) {
+                dates.forEach(date => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'unavailableDates';
+                    checkbox.value = date;
+
+                    const label = document.createElement('label');
+                    label.textContent = date;
+
+                    label.prepend(checkbox);
+                    daysOffDiv.appendChild(label);
+                    daysOffDiv.appendChild(document.createElement('br'));
+                });
+            }
         }
 
-        function cu() {
-            fetch('', {
-                method: 'GET',
-
-            })
-        }
-
-        // <?php
-        // // Dados simulados
-        // $barbers = [
-        //     1 => ["dates" => ["2024-11-27", "2024-11-28"]],
-        //     2 => ["dates" => ["2024-11-20", "2024-11-21"]],
-        //     3 => ["dates" => []]
-        // ];
-
-        // // ID do barbeiro enviado pela requisição
-        // $barberId = isset($_GET['barberId']) ? (int)$_GET['barberId'] : 0;
-
-        // // Retorna os dados do barbeiro correspondente
-        // if (isset($barbers[$barberId])) {
-        //     echo json_encode($barbers[$barberId]);
-        // } else {
-        //     echo json_encode(["dates" => []]);
-        // }
-        // ?>
-
-
-        // const barberIdSelect = document.getElementById('barberId');
-        // const unavailabilityDiv = document.getElementById('unavailability');
-
-        // // Função para buscar dados do barbeiro
-        // function fetchBarberData(barberId) {
-        //     fetch(`getBarberData.php?barberId=${barberId}`)
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Erro ao buscar dados');
-        //             }
-        //             return response.json();
-        //         })
-        //         .then(data => {
-        //             displayUnavailability(data.dates);
-        //         })
-        //         .catch(error => {
-        //             console.error('Erro:', error);
-        //         });
-        // }
-
-        // // Função para exibir as datas como checkboxes
-        // function displayUnavailability(dates) {
-        //     unavailabilityDiv.innerHTML = ''; // Limpa o conteúdo anterior
-        //     if (dates.length > 0) {
-        //         dates.forEach(date => {
-        //             const checkbox = document.createElement('input');
-        //             checkbox.type = 'checkbox';
-        //             checkbox.name = 'unavailable_dates[]';
-        //             checkbox.value = date;
-
-        //             const label = document.createElement('label');
-        //             label.textContent = date;
-
-        //             label.prepend(checkbox);
-        //             unavailabilityDiv.appendChild(label);
-        //             unavailabilityDiv.appendChild(document.createElement('br'));
-        //         });
-        //     } else {
-        //         unavailabilityDiv.innerHTML = '<p>Sem indisponibilidades para este barbeiro.</p>';
-        //     }
-        // }
-
-        // // Evento para detectar mudanças no dropdown
-        // barberIdSelect.addEventListener('change', () => {
-        //     const selectedBarberId = barberIdSelect.value;
-        //     fetchBarberData(selectedBarberId);
+        // Evento para detectar mudanças no dropdown
+        // daysListDiv.addEventListener('change', () => {
+        //     const selectedBarberId = daysListDiv.value;
+        //     fetchBarber(selectedBarberId);
         // });
 
-        // // Busca inicial (para o barbeiro 1)
-        // fetchBarberData(1);
+        function fetchBarber(barber) {
+            fetch(`../../src/php/getSchedule.php?b=${barber}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar dados');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayUnavailability(data.dates);
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        }
+        fetchBarber(barber);
     </script>
 </body>
 

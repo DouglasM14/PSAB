@@ -50,3 +50,16 @@ to do:
         ()
     - Alterar horários disponíveis para os clientes
         ()
+    +Fazer a foto do barbeiro
+
++Fazer o sistema de alterar horario de funcionamento da barbearia
+
++Esquema das imagens dos serviços
+ 
++Fazer sistema do barbeiro marcar se o cara foi vacição e não foi cortar o bebelo
+
+    *Adicionar uma nova coluna na tebela de horarios pra saber se eles já aconteceram, vão acontecer ou foram cancelados
+
++Sistema de cancelar horario
++Historico do cliente
++Barbeiro marcar que  o cara foi
