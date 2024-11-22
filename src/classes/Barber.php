@@ -46,13 +46,14 @@ class Barber extends Database
         return json_encode($query);
     }
 
-    public function getSchedule(){
+    public function getSchedule()
+    {
         $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = {$this->getIdBarber()}");
 
         return json_encode($query);
     }
 
-    public function registerBarber($name, $email, $password)
+    public function registerBarber($name, $email, $password, $photo)
     {
         try {
             $this->transaction('start');
@@ -85,6 +86,7 @@ class Barber extends Database
                 'emailBarber' => $email,
                 'passwordBarber' => $password,
                 'unavailabilityBarber' => json_encode($scheduleDefault),
+                'photoBarber' => $photo,
                 'idUser' => $lastId
             ];
 
@@ -142,11 +144,6 @@ class Barber extends Database
                 $dataB["passwordBarber"] = $p;
                 $dataU["passwordUser"] = $p;
             }
-
-
-
-            $datas = [$dataB, $dataU];
-            // return $datas;
 
             // $this->transaction('start');
 

@@ -6,28 +6,24 @@ require_once '../../src/php/operatingHours.php';
 
 verifyLogin('client');
 
+// Instancia o Barber apenas uma vez
 $barber = new Barber();
 
+// Recupera as listas de barbeiros e horários
 $barberList = $barber->barberList();
-
 $barberSchedule = $barber->verifySchedule();
-
 $listOperating = json_encode(listOperating());
 
-// echo '<pre>';
-// print_r($barberSchedule);
-// echo '</pre>';
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $barber = $_POST['barber'];
+    $barberId = $_POST['barber'];
     $hour = $_POST['hour'];
     $day = $_POST['day'];
 
+    // Instancia o cliente apenas uma vez
     $client = new Client($_SESSION['idUser']);
-
-    $schedule = $client->toSchedule($barber, $hour, $day);
+    $client->toSchedule($barberId, $hour, $day);
 }
-
+$_SESSION['msg'] = "Horário marcado com sucesso";
 ?>
 
 <!DOCTYPE html>
@@ -46,31 +42,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <main>
         <section>
-            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
-                <div id="lista de barbeiros">
+            <form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
+                <div id="listaDeBarbeiros">
                     <p>Escolha o Barbeiro: </p>
-                    <?php
-                    if (count($barberList) > 0) {
-                        foreach ($barberList as $b) {
-                            echo '<input type="radio" value="' . htmlspecialchars($b['idBarber']) . '" name="barber" onclick="generateInputsDays(' . htmlspecialchars($b['idBarber']) . ')">';
-                            echo `<label>` . htmlspecialchars($b['nameBarber']) . `</label>`;
-                        }
-                    }
-                    ?>
+                    <?php foreach ($barberList as $b): ?>
+                        <input type="radio" id="barber-<?= $b['idBarber'] ?>" name="barber" value="<?= htmlspecialchars($b['idBarber']) ?>" onclick="generateInputsDays(<?= htmlspecialchars($b['idBarber']) ?>)">
+                        <label for="barber-<?= $b['idBarber'] ?>"><?= htmlspecialchars($b['nameBarber']) ?></label><br>
+                    <?php endforeach; ?>
                 </div>
 
                 <div>
                     <p>Escolha a Data: </p>
-                    <div id="daysList">
-
-                    </div>
+                    <div id="daysList"></div>
                 </div>
 
                 <div>
                     <p>Escolha a Hora: </p>
-                    <div id="hoursList">
-
-                    </div>
+                    <div id="hoursList"></div>
                 </div>
 
                 <button type="submit">Marcar Horário</button>
@@ -82,164 +70,118 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </section>
     </main>
 
-    <Footer>
+    <footer>
         <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
-    </Footer>
+    </footer>
 
     <script>
-        var barberSchedules = <?php echo $barberSchedule ?>;
-        var listOperating = <?php echo $listOperating ?>;
+        const barberSchedules = <?= $barberSchedule ?>;
+        const listOperating = <?= $listOperating ?>;
 
         function verifyDaysHoursOff(idBarber, type, day, hour) {
-            const barber = barberSchedules.find(b => b.idBarber === idBarber);
+            const barber = barberSchedules.find(b => b.idBarber == idBarber);
             const unavailability = JSON.parse(barber.unavailabilityBarber);
 
-            let isUnavailable = false
-
-            if (type == 'day') {
-                unavailability.forEach(element => {
-                    if (element.times.length == 0 && element.date == day) {
-                        // console.log(`não trabalha no dia ${element.date}`);
-                        isUnavailable = true
-                    }
-                })
-            } else if (type = 'time') {
-                unavailability.forEach(element => {
-                    if (element.times.length != 0 && element.date == day && element.times.find(i => i == hour)) {
-                        isUnavailable = true
-                        // console.log(`não trabalha no dia ${element.date}`);
-                    }
-                })
-            }
-            return isUnavailable
+            return unavailability.some(element => {
+                if (type === 'day') {
+                    return element.times.length === 0 && element.date === day;
+                } else if (type === 'time') {
+                    return element.times.includes(hour) && element.date === day;
+                }
+                return false;
+            });
         }
 
         function generateDaysPortuguese(i) {
             const daysOfWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
-            return daysOfWeek[i]
+            return daysOfWeek[i];
         }
 
-        // Function to generate radio inputs for the next 14 days
-        function generateInputsDays(barber) {
-
+        function generateInputsDays(barberId) {
             const daysListDiv = document.getElementById("daysList");
             const hoursListDiv = document.getElementById("hoursList");
 
-            // Clear previous content
             daysListDiv.innerHTML = "";
             hoursListDiv.innerHTML = "";
 
+            const currentDate = new Date();
+            const daysHTML = [];
 
-            // Current system date
-            let currentDate = new Date();
-
-            // Generate the next 14 days
             for (let i = 0; i < 14; i++) {
-                // Create a new date by adding days
-                let date = new Date(currentDate);
+                const date = new Date(currentDate);
                 date.setDate(currentDate.getDate() + i);
 
-                // Format the date and the day of the week
-                let dayOfWeek = generateDaysPortuguese(date.getDay())
-                let formattedDate = date.toLocaleDateString("pt-BR");
+                const isoDate = date.toISOString().split("T")[0];
+                const dayOfWeek = generateDaysPortuguese(date.getDay());
+                const formattedDate = date.toLocaleDateString("pt-BR");
 
-                // Create the input and label elements
-                let label = document.createElement("label");
-                let radio = document.createElement("input");
-                radio.type = "radio";
-                radio.name = "day";
-                radio.value = date.toISOString().split("T")[0]; // Format "YYYY-MM-DD" for the value
-                radio.setAttribute('onclick', `generateInputsHours(this.value, ${barber})`)
+                const isDisabled = listOperating.find(l => l.dayOperating === dayOfWeek) === undefined || verifyDaysHoursOff(barberId, 'day', isoDate);
+                const radio = `<input type="radio" name="day" value="${isoDate}" onclick="generateInputsHours('${isoDate}', ${barberId})" ${isDisabled ? 'disabled' : ''}>`;
+                const label = `<label>${radio} ${formattedDate} - ${dayOfWeek}</label><br>`;
 
-                if (listOperating.find(l => l.dayOperating === dayOfWeek) === undefined || verifyDaysHoursOff(barber, 'day', date.toISOString().split("T")[0])) {
-                    radio.setAttribute('disabled', 'true')
-                }
-
-                // Set the label content and append the input
-                label.appendChild(radio);
-                label.append(` ${formattedDate} - ${dayOfWeek}`)
-
-                // Append the label with the radio to the list
-                daysListDiv.appendChild(label);
-                daysListDiv.appendChild(document.createElement("br"))
+                daysHTML.push(label);
             }
+
+            daysListDiv.innerHTML = daysHTML.join('');
         }
 
-        async function generateInputsHours(day, barber) {
+        async function generateInputsHours(day, barberId) {
             const hoursListDiv = document.getElementById("hoursList");
             hoursListDiv.innerHTML = "";
 
-            let date = new Date(day + 'T00:00:00');
-            let dayOfWeek = generateDaysPortuguese(date.getDay())
-
-            let schedule = generateSchedule(dayOfWeek)
-            let dayMarked = await getDayMarked(barber, day);
+            const date = new Date(day + 'T00:00:00');
+            const dayOfWeek = generateDaysPortuguese(date.getDay());
+            const schedule = generateSchedule(dayOfWeek);
+            const dayMarked = await getDayMarked(barberId, day);
 
             const actualDay = (element) => {
-                let time = new Date(); // Hora atual
-                let today = time.toISOString().split("T")[0]; 
+                const time = new Date();
+                const today = time.toISOString().split("T")[0];
 
                 if (today === day) {
-                    let [hour, minute] = element.split(":").map(Number); 
-                    let now = time.getHours() * 60 + time.getMinutes(); 
-                    let scheduleTime = hour * 60 + minute;
-                    return scheduleTime <= now; 
+                    const [hour, minute] = element.split(":").map(Number);
+                    const now = time.getHours() * 60 + time.getMinutes();
+                    const scheduleTime = hour * 60 + minute;
+                    return scheduleTime <= now;
                 }
                 return false;
             };
 
-            schedule.forEach(element => {
-                // Create the input and label elements
-                let label = document.createElement("label")
-                let radio = document.createElement("input")
-                radio.type = "radio"
-                radio.name = "hour"
-                radio.value = element
-
-                if (verifyDaysHoursOff(barber, 'time', day, element) || dayMarked.includes(element) || actualDay(element)) {
-                    radio.setAttribute('disabled', 'true')
-                }
-
-                // Set the label content and append the input
-                label.appendChild(radio)
-                label.append(`${element}`)
-
-                // Append the label with the radio to the list
-                hoursListDiv.appendChild(label);
-                hoursListDiv.appendChild(document.createElement("br"))
+            const hoursHTML = schedule.map(element => {
+                const isDisabled = verifyDaysHoursOff(barberId, 'time', day, element) || dayMarked.includes(element) || actualDay(element);
+                const radio = `<input type="radio" name="hour" value="${element}" ${isDisabled ? 'disabled' : ''}>`;
+                const label = `<label>${radio} ${element}</label><br>`;
+                return label;
             });
+
+            hoursListDiv.innerHTML = hoursHTML.join('');
         }
 
-        // Função para criar uma lista de horários com intervalos de 50 minutos
         function generateSchedule(dayWeek) {
-            let schedule = []
+            const list = listOperating.find(d => d.dayOperating === dayWeek);
 
-            let list = listOperating.find(d => d.dayOperating == dayWeek);
-
-            // Converte os horários para objetos Date para manipulação
             let [startHour, startMinute] = list.startOperating.split(':').map(Number);
             let [endHour, endMinute] = list.endOperating.split(':').map(Number);
 
+            const schedule = [];
             let hour = startHour;
             let minutes = startMinute;
 
-            // Cria o horário até atingir o horário de fim
             while (hour < endHour || (hour === endHour && minutes < endMinute)) {
                 schedule.push(`${String(hour).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`);
-
-                // Incrementa o tempo em 50 minutos
                 minutes += 40;
                 if (minutes >= 60) {
                     minutes -= 60;
                     hour += 1;
                 }
             }
+
             return schedule;
         }
 
         function getDayMarked(barberId, selectedDate) {
-            let formData = new FormData();
+            const formData = new FormData();
             formData.append('barberId', barberId);
             formData.append('selectedDate', selectedDate);
 
@@ -247,19 +189,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     method: 'POST',
                     body: formData,
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    return data;
-                })
-                .catch(error => {
-                    console.error('Erro na requisição AJAX:', error);
-                    throw error; // Lança o erro para o tratamento posterior
-                });
+                .then(response => response.ok ? response.json() : Promise.reject('Error fetching data'))
+                .catch(error => console.error('Error:', error));
         }
     </script>
 </body>

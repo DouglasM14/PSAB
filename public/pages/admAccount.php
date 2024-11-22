@@ -42,6 +42,9 @@ if (isset($_SESSION['msg'])) {
             padding: 8px;
             text-align: left;
         }
+        img{
+            height: 200px;
+        }
     </style>
 </head>
 
@@ -57,25 +60,25 @@ if (isset($_SESSION['msg'])) {
             <p>
                 <a href="../../src/php/logout.php">sair</a>
             </p>
-            
-        </section>
 
+        </section>
         <section>
             <h3>Lista de Barbeiros</h3>
             <table>
                 <tr>
                     <th>Nome do Barbeiro</th>
                     <th>Email do Barbeiro</th>
+                    <th>Foto do Barbeiro</th>
                     <th></th>
                     <th></th>
                 </tr>
-
                 <?php
                 if (count($resultBarber) > 0) {
                     foreach ($resultBarber as $row) {
                         echo "<tr>";
                         echo "<td>" . $row["nameBarber"] . "</td>";
                         echo "<td>" . $row["emailBarber"] . "</td>";
+                        echo "<td> <img src='" . $row["photoBarber"] . "'></td>";
                         echo '<td><a href="../../src/php/delete.php?a=' . $row["idBarber"] . '">Deletar</a></td>';
                         echo '<td><a href="editBarber.php?a=' . $row["idBarber"] . '">Editar</a></td>';
                         echo "</tr>";

@@ -6,15 +6,9 @@ verifyLogin('barber');
 
 $barber = new Barber($_SESSION['idUser']);
 
-$barberSchedule = json_decode($barber->getSchedule());
-
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     # code...
 }
-
-echo "<pre>";
-print_r($barberSchedule);
-echo "</pre>";
 
 ?>
 
@@ -41,17 +35,15 @@ echo "</pre>";
             <section>
                 <h2>Editar a agenda</h2>
 
-                <div>
-                    <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
-                        <div id="daysList" onload="generateInputsDaysOff()">
-                            <h3>Alterar dias de trabalho:</h3>
-                            <div id="daysOff"></div>
+                <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
+                    <p>Alterar dias de trabalho:</p>
+                    <div id="daysList" onload="generateInputsDaysOff()">
+                        <div id="daysOff"></div>
 
-                        </div>
+                    </div>
 
 
-                    </form>
-                </div>
+                </form>
             </section>
         </section>
 
@@ -63,11 +55,28 @@ echo "</pre>";
     </footer>
 
     <script>
+        fetch(`../../src/php/getSchedule.php`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar dados');
+                }
+                return response.json();
+            })
+            .then(data => {
+                var unavailability = data
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+
+
+        displayUnavailability()
         const daysListDiv = document.getElementById('daysList');
         const daysOffDiv = document.getElementById('daysOff');
-        const barber = <?= $barber->getIdBarber() ?>
 
-        function displayUnavailability(dates) {
+        function displayUnavailability() {
+            console.log(dates);
+
             if (dates.length > 0) {
                 dates.forEach(date => {
                     const checkbox = document.createElement('input');
@@ -85,28 +94,26 @@ echo "</pre>";
             }
         }
 
-        // Evento para detectar mudanças no dropdown
-        // daysListDiv.addEventListener('change', () => {
-        //     const selectedBarberId = daysListDiv.value;
-        //     fetchBarber(selectedBarberId);
-        // });
+        async function verifyDaysHoursOff(type, day, hour) {
+            let isUnavailable = false
 
-        function fetchBarber(barber) {
-            fetch(`../../src/php/getSchedule.php?b=${barber}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao buscar dados');
+            if (type == 'day') {
+                await unavailability.forEach(element => {
+                    if (element.times.length == 0 && element.date == day) {
+                        // console.log(`não trabalha no dia ${element.date}`);
+                        isUnavailable = true
                     }
-                    return response.json();
                 })
-                .then(data => {
-                    displayUnavailability(data.dates);
+            } else if (type == 'time') {
+                await unavailability.forEach(element => {
+                    if (element.times.length != 0 && element.date == day && element.times.find(i => i == hour)) {
+                        isUnavailable = true
+                        // console.log(`não trabalha no dia ${element.date}`);
+                    }
                 })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
+            }
+            return isUnavailable
         }
-        fetchBarber(barber);
     </script>
 </body>
 

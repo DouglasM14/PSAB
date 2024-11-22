@@ -8,11 +8,6 @@ $client = new Client($_SESSION['idUser']);
 
 $result = $client->viewSchedule();
 
-// echo "<pre>";
-// print_r($teste);
-// echo "</pre>";
-
-
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $name = $_POST['nameClient'];
     $email = $_POST['emailClient'];
@@ -22,7 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     echo $updateMsg;
 }
-
+if (isset($_SESSION['msg'])) {
+    echo $_SESSION['msg'];
+    unset($_SESSION['msg']);
+}
 ?>
 
 <!DOCTYPE html>

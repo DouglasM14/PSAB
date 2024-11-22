@@ -29,6 +29,7 @@ class Client extends Database
             'idBarber' => $barber
         ];
         $this->insert('tb_schedule', $data);
+        header("Location: clientAccount.php");
     }
 
     public function viewSchedule()
