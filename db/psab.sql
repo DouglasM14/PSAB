@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Tempo de geração: 18-Nov-2024 às 15:41
+-- Tempo de geração: 22-Nov-2024 às 15:42
 -- Versão do servidor: 5.7.33
--- versão do PHP: 8.1.1
+-- versão do PHP: 8.0.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,19 +58,20 @@ CREATE TABLE IF NOT EXISTS `tb_barber` (
   `emailBarber` varchar(75) NOT NULL,
   `passwordBarber` int(32) NOT NULL,
   `unavailabilityBarber` json NOT NULL,
+  `photoBarber` varchar(100) NOT NULL,
   `idUser` int(11) NOT NULL,
   PRIMARY KEY (`idBarber`),
   KEY `idUser` (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_barber`
 --
 
-INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarber`, `unavailabilityBarber`, `idUser`) VALUES
-(1, 'Tico', 'tico@gmail.com', 123, '[{\"date\": \"2024-11-27\", \"times\": [\"14:40\"]}, {\"date\": \"2024-11-28\", \"times\": [\"10:00\", \"15:20\"]}]', 3),
-(2, 'Daniel', 'daniel@gmail.com', 123, '[{\"date\": \"2024-11-20\", \"times\": []}, {\"date\": \"2024-11-21\", \"times\": []}]', 2),
-(3, 'Rari', 'rari@gmail.com', 123, 'null', 4);
+INSERT INTO `tb_barber` (`idBarber`, `nameBarber`, `emailBarber`, `passwordBarber`, `unavailabilityBarber`, `photoBarber`, `idUser`) VALUES
+(1, 'Tico', 'tico@gmail.com', 123, '[{\"date\": \"2024-11-27\", \"times\": [\"14:40\"]}, {\"date\": \"2024-11-28\", \"times\": [\"10:00\", \"15:20\"]}]', 'barber6740943a2ce1f.png', 3),
+(2, 'Daniel', 'daniel@gmail.com', 123, '[{\"date\": \"2024-11-20\", \"times\": []}, {\"date\": \"2024-11-21\", \"times\": []}]', '', 2),
+(3, 'Rari', 'rari@gmail.com', 123, 'null', '', 4);
 
 -- --------------------------------------------------------
 
@@ -86,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `tb_client` (
   `idUser` int(11) NOT NULL,
   PRIMARY KEY (`idClient`),
   KEY `idUser` (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='Tabela dos clientes da barbearia';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='Tabela dos clientes da barbearia';
 
 --
 -- Extraindo dados da tabela `tb_client`
@@ -141,27 +142,30 @@ CREATE TABLE IF NOT EXISTS `tb_schedule` (
   `idSchedule` int(11) NOT NULL AUTO_INCREMENT,
   `timeSchedule` time NOT NULL,
   `dateSchedule` date NOT NULL,
+  `stateSchedule` enum('on','end','cancel') NOT NULL DEFAULT 'on',
   `idClient` int(11) NOT NULL,
   `idBarber` int(11) NOT NULL,
   PRIMARY KEY (`idSchedule`),
   KEY `idClient` (`idClient`),
   KEY `idBarber` (`idBarber`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_schedule`
 --
 
-INSERT INTO `tb_schedule` (`idSchedule`, `timeSchedule`, `dateSchedule`, `idClient`, `idBarber`) VALUES
-(1, '23:21:00', '2024-09-18', 1, 2),
-(3, '06:13:00', '0000-00-00', 4, 1),
-(5, '02:11:00', '2024-07-05', 4, 3),
-(6, '05:12:00', '2024-09-07', 4, 1),
-(7, '16:14:00', '2024-09-27', 3, 2),
-(8, '21:16:00', '2024-09-04', 3, 2),
-(9, '10:16:00', '2024-09-14', 3, 3),
-(10, '15:40:00', '2024-11-07', 1, 1),
-(11, '15:40:00', '2024-11-07', 1, 1);
+INSERT INTO `tb_schedule` (`idSchedule`, `timeSchedule`, `dateSchedule`, `stateSchedule`, `idClient`, `idBarber`) VALUES
+(1, '23:21:00', '2024-09-18', 'on', 1, 2),
+(3, '06:13:00', '0000-00-00', 'on', 4, 1),
+(5, '02:11:00', '2024-07-05', 'on', 4, 3),
+(6, '05:12:00', '2024-09-07', 'on', 4, 1),
+(7, '16:14:00', '2024-09-27', 'on', 3, 2),
+(8, '21:16:00', '2024-09-04', 'on', 3, 2),
+(9, '10:16:00', '2024-09-14', 'on', 3, 3),
+(10, '15:40:00', '2024-11-07', 'on', 1, 1),
+(11, '15:40:00', '2024-11-07', 'on', 1, 1),
+(12, '15:20:00', '2024-11-22', 'on', 1, 1),
+(13, '12:00:00', '2024-11-21', 'on', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -174,17 +178,19 @@ CREATE TABLE IF NOT EXISTS `tb_service` (
   `nameService` varchar(50) NOT NULL,
   `descService` varchar(255) NOT NULL,
   `priceService` decimal(12,2) NOT NULL,
+  `iconService` varchar(100) NOT NULL,
   `expPriceService` decimal(12,2) NOT NULL,
   PRIMARY KEY (`idService`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_service`
 --
 
-INSERT INTO `tb_service` (`idService`, `nameService`, `descService`, `priceService`, `expPriceService`) VALUES
-(1, 'Corte Básico', 'Um simples corte de cabelo', '30.00', '35.00'),
-(2, 'barba', 'Barba bem feita', '25.00', '30.00');
+INSERT INTO `tb_service` (`idService`, `nameService`, `descService`, `priceService`, `iconService`, `expPriceService`) VALUES
+(1, 'Corte Básico', 'Um simples corte de cabelo', '30.00', 'cream.png', '35.00'),
+(2, 'barba', 'Barba bem feita', '25.00', '', '30.00'),
+(3, '123', '123', '123.00', '', '123.00');
 
 -- --------------------------------------------------------
 
@@ -199,7 +205,7 @@ CREATE TABLE IF NOT EXISTS `tb_userlogin` (
   `typeUser` enum('client','barber','adm') NOT NULL,
   PRIMARY KEY (`idUser`),
   UNIQUE KEY `emailUser` (`emailUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_userlogin`

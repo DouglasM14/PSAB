@@ -21,9 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Instancia o cliente apenas uma vez
     $client = new Client($_SESSION['idUser']);
-    $client->toSchedule($barberId, $hour, $day);
+    $reultMsg = $client->toSchedule($barberId, $hour, $day);
+
+    $_SESSION['msg'] = $reultMsg;
+
+    header("Location: clientAccount.php");
 }
-$_SESSION['msg'] = "Horário marcado com sucesso";
 ?>
 
 <!DOCTYPE html>
@@ -170,7 +173,7 @@ $_SESSION['msg'] = "Horário marcado com sucesso";
 
             while (hour < endHour || (hour === endHour && minutes < endMinute)) {
                 schedule.push(`${String(hour).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`);
-                minutes += 40;
+                minutes += 30;
                 if (minutes >= 60) {
                     minutes -= 60;
                     hour += 1;

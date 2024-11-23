@@ -29,7 +29,8 @@ class Client extends Database
             'idBarber' => $barber
         ];
         $this->insert('tb_schedule', $data);
-        header("Location: clientAccount.php");
+
+        return "Horário marcado com sucesso";
     }
 
     public function viewSchedule()
@@ -41,6 +42,12 @@ class Client extends Database
             "idClient = '{$this->getIdClient()}'"
         );
         return $query;
+    }
+
+    public function alterStateSchedule($absent, $idBarber){
+        $this->update("tb_schedule", 
+        "stateSchedule = $absent", 
+        "tb_schedule.idClient = {$this->getIdClient()} AND tb_schedule.idBarber = {$idBarber}");
     }
 
     public function registerClient($name, $email, $password)

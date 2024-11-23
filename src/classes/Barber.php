@@ -8,8 +8,7 @@ class Barber extends Database
     private $nameBarber;
     private $emailBarber;
     private $passwordBarber;
-    private $imageBarber;
-    private $dirImageBarber;
+    private $photoBarber;
 
     function __construct($id = '', $type = '')
     {
@@ -24,6 +23,7 @@ class Barber extends Database
             $this->setNameBarber($query[0]['nameBarber']);
             $this->setEmailBarber($query[0]['emailBarber']);
             $this->setPasswordBarber($query[0]['passwordBarber']);
+            $this->setPhotoBarber($query[0]['photoBarber']);
             $this->setIdUser($query[0]['idUser']);
         }
     }
@@ -32,7 +32,7 @@ class Barber extends Database
     {
         $query = $this->selectJoin(
             "tb_schedule",
-            "nameClient, dateSchedule, timeSchedule",
+            "nameClient, idClient, dateSchedule, timeSchedule, stateSchedule",
             "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
             "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient"
         );
@@ -112,6 +112,9 @@ class Barber extends Database
             } else {
                 $this->delete('tb_barber', "idUser = '{$this->getIdUser()}'");
                 $this->delete('tb_userLogin', "idUser = '{$this->getIdUser()}'");
+                $serverPath = __DIR__ . '/../../db/uploadBarber/';
+                $filePath = $serverPath . $this->getPhotoBarber();
+                unlink($filePath);
             }
 
             $this->transaction('commit');
@@ -121,7 +124,7 @@ class Barber extends Database
         }
     }
 
-    public function updateBarber($n, $e, $p)
+    public function updateBarber($n, $e, $p, $f)
     {
         try {
             $dataB = []; // dados alterados para a tabela Barber
@@ -145,11 +148,16 @@ class Barber extends Database
                 $dataU["passwordUser"] = $p;
             }
 
+            $dataB['photoBarber'] = $f;
+
             // $this->transaction('start');
 
             if (!empty($dataB)) {
                 $this->update('tb_barber', $dataB, "idUser = '{$this->getIdUser()}'");
-                // return $this->select('tb_barber', "*","idUser = '{$this->getIdUser()}'");
+
+                $serverPath = __DIR__ . '/../../db/uploadBarber/';
+                $filePath = $serverPath . $this->getPhotoBarber();
+                unlink($filePath);
 
                 if (!empty($dataU)) {
                     $this->update('tb_userLogin', $dataU, "idUser = '{$this->getIdUser()}'");
@@ -214,24 +222,14 @@ class Barber extends Database
         return $this->passwordBarber = $passwordBarber;
     }
 
-    public function getImageBarber()
+    public function getPhotoBarber()
     {
-        return $this->imageBarber;
+        return $this->photoBarber;
     }
 
-    public function setImageBarber($imageBarber)
+    public function setPhotoBarber($photoBarber)
     {
-        $this->imageBarber = $imageBarber;
-    }
-
-    public function getDirImageBarber()
-    {
-        return $this->dirImageBarber;
-    }
-
-    public function setDirImageBarber($dirImageBarber)
-    {
-        $this->dirImageBarber = $dirImageBarber;
+        $this->photoBarber = $photoBarber;
     }
 
     public function getIdUser()

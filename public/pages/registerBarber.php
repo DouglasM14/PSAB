@@ -3,15 +3,16 @@ require_once "../../src/php/protect.php";
 require_once "../../src/classes/Barber.php";
 require_once "../../src/php/imageConstructor.php";
 
-// verifyLogin('adm');
+verifyLogin('adm');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['nameBarber']) ? $_POST['nameBarber'] : null;
     $email = isset($_POST['emailBarber']) ? $_POST['emailBarber'] : null;
     $pass = isset($_POST['passwordBarber']) ? $_POST['passwordBarber'] : null;
+
     $photo = imageConstructor($_FILES['photoBarber']);
 
-    $barber = new Barber($_SESSION['idBarber']);
+    $barber = new Barber();
 
     $barber->registerBarber($name, $email, $pass, $photo);
 }
@@ -42,11 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="emailBarber">Email: </label>
                     <input type="text" name="emailBarber">
                 </div>
-
-                <!-- <div>
-                    <label for="emailBarber">Agenda: </label>
-                    <input type="text" name="emailBarber" id="">
-                </div> -->
 
                 <div>
                     <label for="passwordBarber">Senha: </label>

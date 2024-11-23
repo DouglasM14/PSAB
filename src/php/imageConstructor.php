@@ -3,34 +3,34 @@ require_once "../../src/classes/Barber.php";
 
 function imageConstructor($image)
 {
-    if (isset($image) && $image['error'] == false) {
-        $photo = $image;
+    try {
+        if (isset($image) && $image['error'] == 0) {
+            $photo = $image;
 
-        $serverPath = __DIR__ . '/../../db/uploadBarber/';
+            $extension = strtolower(pathinfo($photo['name'], PATHINFO_EXTENSION));
+            $photo['name'] = 'barber';
 
-        $webPath = '/db/uploadBarber/';
+            if (!in_array($extension, ['jpg', 'jpeg', 'png'])) {
+                return false;
+            }
 
-        $newName = uniqid(pathinfo($photo['name'], PATHINFO_FILENAME));
+            $newName = uniqid(pathinfo($photo['name'], PATHINFO_FILENAME));
+            $newName = str_replace('.' . $extension, '', $newName);
 
-        $newName = str_replace('.jpg', '', $newName);
+            $serverPath = __DIR__ . '/../../db/uploadBarber/';
+            $fullPath = $serverPath . $newName . "." . $extension;
 
-        $extension = strtolower(pathinfo($photo['name'], PATHINFO_EXTENSION));
+            $isMoved = move_uploaded_file($photo['tmp_name'], $fullPath);
 
-        if ($extension != "jpg" && $extension != "png") {
-            throw new Exception('Tipo de arquivo não aceito');
-        }
-        $fullPath = $serverPath . $newName . "." . $extension;
-
-        $webPath .= $newName . "." . $extension;
-
-        $isRight = move_uploaded_file($photo['tmp_name'], $fullPath);
-        if ($isRight) {
-            return $webPath;
+            if ($isMoved) {
+                return $newName . '.' . $extension;
+            } else {
+                return false;
+            }
         } else {
-            throw new Exception('Um erro inesperado ocorreu');
+            return false;
         }
-    } else {
-        $photo = null;
-        throw new Exception('Imagem não enviada ou inválida');
+    } catch (Exception $e) {
+        return "Erro ao cadastrar Barbeiro: " . $e->getMessage();
     }
 }

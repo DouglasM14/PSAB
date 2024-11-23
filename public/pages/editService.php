@@ -12,10 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $desc = $_POST['descService'];
     $price = $_POST['priceService'];
     $expPrice = $_POST['expPriceService'];
+    $icons = $_POST['icons'];
 
-    $returnMsg = $service->updateService($chosenId, $name, $desc, $price, $expPrice);
+    $returnMsg = $service->updateService($chosenId, $name, $desc, $price, $expPrice, $icons);
 
     $_SESSION['msg'] = 'Serviço atualizado com Sucesso';
+
+    print_r($returnMsg);
+
     header("location: admAccount.php");
 }
 ?>
@@ -57,6 +61,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div>
                         <label for="">Preço fim de semana: </label>
                         <input name="expPriceService" value="<?php echo $service->getExpPriceService() ?>" type="text">
+                    </div>
+
+                    <div>
+                        <label for="">Icone Atual: </label>
+                        <img src="../../db/services/<?= $service->getIconService() ?>" alt="" height="200"><br>
+                        <select name="icons">
+                            <option value="conditione.png">Condicionador</option>
+                            <option value="cream.png">Creme</option>
+                            <option value="hairGel.png">Gel de cabelo</option>
+                            <option value="man.png">Homem</option>
+                            <option value="mask.png">Máscara</option>
+                            <option value="razor.png">Navalha</option>
+                            <option value="razor2.png">Navalha 2</option>
+                            <option value="scissors.png">Tesoura</option>
+                            <option value="tint.png">Tintura</option>
+                        </select>
                     </div>
 
                     <input type="hidden" name="id" value="<?= $_GET["a"] ?>">

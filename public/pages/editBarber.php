@@ -1,5 +1,6 @@
 <?php
 require_once "../../src/php/protect.php";
+require_once "../../src/php/imageConstructor.php";
 require_once "../../src/classes/Barber.php";
 
 verifyLogin('adm');
@@ -15,12 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $name = $_POST["nameBarber"];
     $email = $_POST["emailBarber"];
     $pass = $_POST["passwordBarber"];
+    $photo = imageConstructor($_FILES["photoBarber"]);
 
-    $resultMsg = $barber->updateBarber($name, $email, $pass);
+    if ($photo) {
+        $resultMsg = $barber->updateBarber($name, $email, $pass, $photo);
+    } else {
+        $resultMsg = 'Erro ao enviar imagem';
+    }
 
-    echo "<pre>";
-    print_r($resultMsg);
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($resultMsg);
+    // echo "</pre>";
 
     $_SESSION['msg'] = $resultMsg;
     header("location: admAccount.php");
@@ -37,52 +43,51 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </head>
 
 <body>
+    <header>
+        <h1>PSAB - Editar Barbeiro</h1>
+    </header>
 
-    <body>
-        <header>
-            <h1>PSAB - Editar Barbeiro</h1>
-        </header>
+    <main>
+        <section>
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post" enctype="multipart/form-data">
+                <div>
+                    <label for="nameBarber">Nome:</label>
+                    <input name="nameBarber" value="<?php echo $barber->getNameBarber() ?>" type="text">
+                </div>
 
-        <main>
-            <section>
-                <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
-                    <div>
-                        <label for="nameBarber">Nome:</label>
-                        <input name="nameBarber" value="<?php echo $barber->getNameBarber() ?>" type="text">
-                    </div>
+                <div>
+                    <label for="emailBarber">Email:</label>
+                    <input name="emailBarber" value="<?php echo $barber->getEmailBarber() ?>" type="text">
+                </div>
 
-                    <div>
-                        <label for="emailBarber">Email:</label>
-                        <input name="emailBarber" value="<?php echo $barber->getEmailBarber() ?>" type="text">
-                    </div>
+                <div>
+                    <label for="passwordBarber">senha:</label>
+                    <input name="passwordBarber" value="<?php echo $barber->getPasswordBarber() ?>" type="text">
+                </div>
 
-                    <div>
-                        <label for="passwordBarber">senha:</label>
-                        <input name="passwordBarber" value="<?php echo $barber->getPasswordBarber() ?>" type="text">
-                    </div>
+                <div>
+                    <label for="">Foto:</label>
+                    <img src='../../db/uploadBarber/<?php echo $barber->getPhotoBarber() ?>'><br>
+                    <input name="photoBarber" value="<?php echo $barber->getPhotoBarber() ?>" type="file">
+                </div>
 
-                    <div>
-                        <label for="">Preço:</label>
-                        <!-- <input name="photoBarber" value="<?php // echo $barber->getImageBarber() ?>" type="file"> -->
-                    </div>
+                <div>
+                    <button type="submit">Editar</button>
+                </div>
+            </form>
+        </section>
 
-                    <div>
-                        <button type="submit">Editar</button>
-                    </div>
-                </form>
-            </section>
+        <section>
+            <p>
+                <a href="admAccount.php">Voltar</a>
+            </p>
+        </section>
+    </main>
 
-            <section>
-                <p>
-                    <a href="barberAccount.php">Voltar</a>
-                </p>
-            </section>
-        </main>
-
-        <footer>
-            <p>Site desenvolvido por Nexiun Technologies</p>
-            <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
-        </footer>
-    </body>
+    <footer>
+        <p>Site desenvolvido por Nexiun Technologies</p>
+        <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
+    </footer>
+</body>
 
 </html>

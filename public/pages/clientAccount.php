@@ -15,7 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $updateMsg = $client->updateClient($name, $email, $pass, $_SESSION['idUser']);
 
-    echo $updateMsg;
+    // echo $updateMsg;
+    $_SESSION['msg'] = $updateMsg;
 }
 if (isset($_SESSION['msg'])) {
     echo $_SESSION['msg'];
