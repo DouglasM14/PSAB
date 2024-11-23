@@ -179,7 +179,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     hour += 1;
                 }
             }
-
             return schedule;
         }
 

@@ -32,7 +32,7 @@ class Barber extends Database
     {
         $query = $this->selectJoin(
             "tb_schedule",
-            "nameClient, idClient, dateSchedule, timeSchedule, stateSchedule",
+            "*",
             "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
             "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient"
         );
@@ -51,6 +51,16 @@ class Barber extends Database
         $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = {$this->getIdBarber()}");
 
         return json_encode($query);
+    }
+
+    public function alterStateSchedule($absent)
+    {
+        $this->update(
+            "tb_schedule",
+            "stateSchedule = $absent",
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.timeSchedule = {}
+            AND tb_schedule.dateSchedule = {}"
+        );
     }
 
     public function registerBarber($name, $email, $password, $photo)

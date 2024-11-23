@@ -83,11 +83,11 @@ function hasPassed($day, $time)
                                 <td>
                                     <?php if ($passed) : ?>
                                         <p>Cliente Compareceu?
-                                            <a href="#" onclick="verifyAbsent('yes')">Sim</a>
-                                            <a href="#" onclick="verifyAbsent('no')">Não</a>
+                                            <button onclick="verifyAbsent('yes', 1)">Sim</button>
+                                            <button onclick="verifyAbsent('no', 1)">Não</button>
                                         </p>
                                     <?php else : ?>
-                                        <a href="#">Cancelar</a>
+                                        <button>Cancelar</button>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -112,21 +112,21 @@ function hasPassed($day, $time)
 
         function verifyAbsent(answer, client) {
             if (answer == 'yes') {
-                param = `?a=[1, ${client}, 3]`
+                param = `?a=[1 ,${client}, 3]`
             } else if (answer == 'no') {
-                param = `?a=[1, ${client}, 3]`
+                param = `?a=[0, ${client}, 3]`
             }
 
             fetch('../../src/php/verifyAbsent.php' + param)
                 .then(response => {
                     if (!response.ok) {
-                        throw 'Ocorreu um erro inesperado'
+                        throw new Error ('Ocorreu um erro inesperado')
                     }
                     return response.json()
                 })
 
                 .then(data => {
-                    console.log(data);
+                    console.log(data.menssage);
                 })
                 .catch(error => {
                     console.error(error)

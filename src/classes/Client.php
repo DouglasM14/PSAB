@@ -44,12 +44,6 @@ class Client extends Database
         return $query;
     }
 
-    public function alterStateSchedule($absent, $idBarber){
-        $this->update("tb_schedule", 
-        "stateSchedule = $absent", 
-        "tb_schedule.idClient = {$this->getIdClient()} AND tb_schedule.idBarber = {$idBarber}");
-    }
-
     public function registerClient($name, $email, $password)
     {
         try {
