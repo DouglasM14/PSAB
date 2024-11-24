@@ -10,15 +10,8 @@ $result = $barber->viewSchedule();
 function hasPassed($day, $time)
 {
     $now = new DateTime();
-    $today = $now->format('Y-m-d');
-
-    if ($today === $day) {
-        list($hour, $minute) = array_map('intval', explode(':', $time));
-        $scheduleTime = $hour * 60 + $minute;
-        $currentTime = $now->format('H') * 60 + $now->format('i');
-        return $scheduleTime <= $currentTime;
-    }
-    return false;
+    $scheduleDateTime = new DateTime("$day $time");
+    return $scheduleDateTime < $now;
 }
 
 ?>
@@ -83,11 +76,11 @@ function hasPassed($day, $time)
                                 <td>
                                     <?php if ($passed) : ?>
                                         <p>Cliente Compareceu?
-                                            <button onclick="verifyAbsent('yes', 1)">Sim</button>
-                                            <button onclick="verifyAbsent('no', 1)">Não</button>
+                                            <a href="../../src/php/verifyAbsent.php?yes='yes'&time=<?= $row['timeSchedule'] ?>&date=<?= $row['dateSchedule'] ?>">Sim</a>
+                                            <a href="../../src/php/verifyAbsent.php?no='no'&time=<?= $row['timeSchedule'] ?>&date=<?= $row['dateSchedule'] ?>">Não</a>
                                         </p>
                                     <?php else : ?>
-                                        <button>Cancelar</button>
+                                        <button onclick="alert('Cancelado')">Cancelar</button>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -108,30 +101,25 @@ function hasPassed($day, $time)
     </footer>
 
     <script>
-        var param = ''
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            var seconds = now.getSeconds().toString().padStart(2, '0');
 
-        function verifyAbsent(answer, client) {
-            if (answer == 'yes') {
-                param = `?a=[1 ,${client}, 3]`
-            } else if (answer == 'no') {
-                param = `?a=[0, ${client}, 3]`
+            // Verifica se é meia-noite
+            if (hours === '00' && minutes === '00' && seconds === '00') {
+                console.log('meia noite');
+            } else {
+                // console.log(`${hours}:${minutes}:${seconds}`);
             }
-
-            fetch('../../src/php/verifyAbsent.php' + param)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error ('Ocorreu um erro inesperado')
-                    }
-                    return response.json()
-                })
-
-                .then(data => {
-                    console.log(data.menssage);
-                })
-                .catch(error => {
-                    console.error(error)
-                })
         }
+
+        // Atualiza o relógio a cada segundo
+        setInterval(updateClock, 1000);
+
+        // Inicializa o relógio na primeira carga da página
+        updateClock();
     </script>
 </body>
 

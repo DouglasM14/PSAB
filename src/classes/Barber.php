@@ -34,7 +34,7 @@ class Barber extends Database
             "tb_schedule",
             "*",
             "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
-            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient"
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient AND tb_schedule.stateSchedule = 'on'"
         );
         return $query;
     }
@@ -53,15 +53,18 @@ class Barber extends Database
         return json_encode($query);
     }
 
-    public function alterStateSchedule($absent)
+    public function alterStateSchedule($state, $hour, $day)
     {
-        $this->update(
+        $this->updateSingle(
             "tb_schedule",
-            "stateSchedule = $absent",
-            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.timeSchedule = {}
-            AND tb_schedule.dateSchedule = {}"
+            "stateSchedule",
+            $state,
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND 
+            tb_schedule.timeSchedule = '$hour' AND 
+            tb_schedule.dateSchedule = '$day'"
         );
     }
+
 
     public function registerBarber($name, $email, $password, $photo)
     {
