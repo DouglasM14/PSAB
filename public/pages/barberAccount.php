@@ -7,6 +7,7 @@ verifyLogin('barber');
 $barber = new Barber($_SESSION['idUser']);
 $result = $barber->viewSchedule();
 
+//FUNÇÃO BUGADA
 function hasPassed($day, $time)
 {
     $now = new DateTime();
@@ -111,7 +112,7 @@ function hasPassed($day, $time)
             if (hours === '00' && minutes === '00' && seconds === '00') {
                 console.log('meia noite');
             } else {
-                // console.log(`${hours}:${minutes}:${seconds}`);
+                //USAR AJAX AQUI
             }
         }
 
