@@ -5,21 +5,20 @@ require_once "../../src/classes/Client.php";
 verifyLogin('client');
 
 $client = new Client($_SESSION['idUser']);
-
 $result = $client->viewSchedule();
+$message = '';
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $name = $_POST['nameClient'];
-    $email = $_POST['emailClient'];
-    $pass = $_POST['passwordClient'];
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $name = htmlspecialchars($_POST['nameClient']);
+    $email = htmlspecialchars($_POST['emailClient']);
+    $pass = htmlspecialchars($_POST['passwordClient']);
 
-    $updateMsg = $client->updateClient($name, $email, $pass, $_SESSION['idUser']);
-
-    // echo $updateMsg;
-    $_SESSION['msg'] = $updateMsg;
+    $message = $client->updateClient($name, $email, $pass, $_SESSION['idUser']);
+    $_SESSION['msg'] = $message;
 }
+
 if (isset($_SESSION['msg'])) {
-    echo $_SESSION['msg'];
+    $message = $_SESSION['msg'];
     unset($_SESSION['msg']);
 }
 ?>
@@ -56,74 +55,68 @@ if (isset($_SESSION['msg'])) {
     </header>
 
     <main>
-        <h2>Bem vindo <?php echo $client->getNameClient() ?></h2>
+        <h2>Bem vindo <?= htmlspecialchars($client->getNameClient()) ?></h2>
+
+        <?php if ($message): ?>
+            <p><?= htmlspecialchars($message) ?></p>
+        <?php endif; ?>
 
         <section>
-            <p>
-                <a href="scheduling.php">Marque um horário aqui</a>
-            </p>
-
-            <p>
-                <a href="../pages/services.php">Ver serviços</a>
-            </p>
-
-            <p>
-                <a href="../../src/php/delete.php">Delete sua conta</a>
-            </p>
-
-            <p>
-                <a href="../../src/php/logout.php">sair</a>
-            </p>
+            <p><a href="scheduling.php">Marque um horário aqui</a></p>
+            <p><a href="clientHistoric.php">Veja seu histórico</a></p>
+            <p><a href="../pages/services.php">Ver serviços</a></p>
+            <p><a href="../../src/php/delete.php">Delete sua conta</a></p>
+            <p><a href="../../src/php/logout.php">Sair</a></p>
         </section>
 
         <section>
             <h2>Editar informações</h2>
-
-            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
+            <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
                 <div>
-                    <label for="">Nome:</label>
-                    <input name="nameClient" value="<?php echo $client->getNameClient() ?>" type="text">
+                    <label for="nameClient">Nome:</label>
+                    <input name="nameClient" value="<?= htmlspecialchars($client->getNameClient()) ?>" type="text" id="nameClient" required>
                 </div>
 
                 <div>
-                    <label for="">Email:</label>
-                    <input name="emailClient" value="<?php echo $client->getEmailClient() ?>" type="text">
+                    <label for="emailClient">Email:</label>
+                    <input name="emailClient" value="<?= htmlspecialchars($client->getEmailClient()) ?>" type="email" id="emailClient" required>
                 </div>
 
                 <div>
-                    <label for="">Senha:</label>
-                    <input name="passwordClient" value="<?php echo $client->getPasswordClient() ?>" type="text">
+                    <label for="passwordClient">Senha:</label>
+                    <input name="passwordClient" value="<?= htmlspecialchars($client->getPasswordClient()) ?>" type="password" id="passwordClient" required>
                 </div>
 
                 <div>
                     <button type="submit">Alterar</button>
                 </div>
-
             </form>
         </section>
 
         <section>
+            <h3>Seus Agendamentos</h3>
             <table>
-                <h3>Seus Agendamentos</h3>
                 <tr>
                     <th>Horário</th>
                     <th>Data</th>
-                    <th>Nome do Barbeiro </th>
+                    <th>Nome do Barbeiro</th>
                     <th></th>
                 </tr>
 
-                <?php
-                if (count($result) > 0) {
-                    foreach ($result as $row) {
-                        echo "<tr>";
-                        echo "<td>" . date('H:i', strtotime($row["timeSchedule"])) . "</td>";
-                        echo "<td>" . date('l, d/m/y', strtotime($row["dateSchedule"])) . "</td>";
-                        echo "<td>" . $row["nameBarber"] . "</td>";
-                        echo '<td><a href="">Editar</a></td>';
-                        echo "</tr>";
-                    }
-                }
-                ?>
+                <?php if (!empty($result)): ?>
+                    <?php foreach ($result as $row): ?>
+                        <tr>
+                            <td><?= date('H:i', strtotime($row["timeSchedule"])) ?></td>
+                            <td><?= date('l, d/m/y', strtotime($row["dateSchedule"])) ?></td>
+                            <td><?= htmlspecialchars($row["nameBarber"]) ?></td>
+                            <td><a href="../../src/php/changeState.php?time=<?=$row['timeSchedule']?>&date=<?=$row['dateSchedule']?>">Cancelar</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4">Nenhum agendamento encontrado.</td>
+                    </tr>
+                <?php endif; ?>
             </table>
         </section>
     </main>
@@ -132,6 +125,7 @@ if (isset($_SESSION['msg'])) {
         <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
     </footer>
+
 </body>
 
 </html>

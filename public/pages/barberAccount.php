@@ -7,14 +7,18 @@ verifyLogin('barber');
 $barber = new Barber($_SESSION['idUser']);
 $result = $barber->viewSchedule();
 
-//FUNÇÃO BUGADA
 function hasPassed($day, $time)
 {
     $now = new DateTime();
     $scheduleDateTime = new DateTime("$day $time");
-    return $scheduleDateTime < $now;
-}
 
+    return $scheduleDateTime <= $now;
+}
+$message = '';
+if (isset($_SESSION['msg'])) {
+    $message =  $_SESSION['msg'];
+    unset($_SESSION['msg']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -47,7 +51,9 @@ function hasPassed($day, $time)
         <h2>Bem vindo, <?php echo htmlspecialchars($barber->getNameBarber()); ?></h2>
 
         <section>
+            <p><?php echo $message?></p>
             <p><a href="editSchedule.php">Alterar agenda</a></p>
+            <p><a href="barberHistoric.php">Ver Histórico</a></p>
             <p><a href="../../src/php/logout.php">Sair</a></p>
         </section>
 
@@ -77,11 +83,11 @@ function hasPassed($day, $time)
                                 <td>
                                     <?php if ($passed) : ?>
                                         <p>Cliente Compareceu?
-                                            <a href="../../src/php/verifyAbsent.php?yes='yes'&time=<?= $row['timeSchedule'] ?>&date=<?= $row['dateSchedule'] ?>">Sim</a>
-                                            <a href="../../src/php/verifyAbsent.php?no='no'&time=<?= $row['timeSchedule'] ?>&date=<?= $row['dateSchedule'] ?>">Não</a>
+                                            <button onclick="alterStateAppointment('yes', '<?= $row['timeSchedule'] ?>', '<?= $row['dateSchedule'] ?>')">Sim</button>
+                                            <button onclick="alterStateAppointment('no', '<?= $row['timeSchedule'] ?>', '<?= $row['dateSchedule'] ?>')">Não</button>
                                         </p>
                                     <?php else : ?>
-                                        <button onclick="alert('Cancelado')">Cancelar</button>
+                                        <button onclick="alterStateAppointment('cancel', '<?= $row['timeSchedule'] ?>', '<?= $row['dateSchedule'] ?>')">Cancelar</button>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -101,26 +107,9 @@ function hasPassed($day, $time)
         <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
     </footer>
 
+    <script src="../../src/js/barberAppoitment.js"></script>
     <script>
-        function updateClock() {
-            var now = new Date();
-            var hours = now.getHours().toString().padStart(2, '0');
-            var minutes = now.getMinutes().toString().padStart(2, '0');
-            var seconds = now.getSeconds().toString().padStart(2, '0');
-
-            // Verifica se é meia-noite
-            if (hours === '00' && minutes === '00' && seconds === '00') {
-                console.log('meia noite');
-            } else {
-                //USAR AJAX AQUI
-            }
-        }
-
-        // Atualiza o relógio a cada segundo
-        setInterval(updateClock, 1000);
-
-        // Inicializa o relógio na primeira carga da página
-        updateClock();
+        window.onload = updateClock();
     </script>
 </body>
 

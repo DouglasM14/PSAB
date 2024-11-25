@@ -39,6 +39,15 @@ class Barber extends Database
         return $query;
     }
 
+    public function viewHistoricBarber(){
+        return $this->selectJoin(
+            "tb_schedule",
+            "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
+            "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+            "tb_schedule.idBarber = {$this->getIdBarber()}"
+        );
+    }
+
     public function verifySchedule()
     {
         $query = $this->select('tb_barber', 'idBarber, unavailabilityBarber', '1');
@@ -53,16 +62,16 @@ class Barber extends Database
         return json_encode($query);
     }
 
-    public function alterStateSchedule($state, $hour, $day)
+    public function barberAlterStateSchedule($state, $hour, $day)
     {
-        $this->updateSingle(
-            "tb_schedule",
-            "stateSchedule",
-            $state,
-            "tb_schedule.idBarber = {$this->getIdBarber()} AND 
-            tb_schedule.timeSchedule = '$hour' AND 
-            tb_schedule.dateSchedule = '$day'"
-        );
+            $this->updateSingle(
+                "tb_schedule",
+                "stateSchedule",
+                $state,
+                "tb_schedule.idBarber = {$this->getIdBarber()} AND 
+                tb_schedule.timeSchedule = '$hour' AND 
+                tb_schedule.dateSchedule = '$day'"
+            );
     }
 
 

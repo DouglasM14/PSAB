@@ -6,20 +6,15 @@ require_once '../../src/php/operatingHours.php';
 
 verifyLogin('client');
 
-// Instancia o Barber apenas uma vez
 $barber = new Barber();
 
-// Recupera as listas de barbeiros e horários
 $barberList = $barber->barberList();
-$barberSchedule = $barber->verifySchedule();
-$listOperating = json_encode(listOperating());
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $barberId = $_POST['barber'];
     $hour = $_POST['hour'];
     $day = $_POST['day'];
 
-    // Instancia o cliente apenas uma vez
     $client = new Client($_SESSION['idUser']);
     $reultMsg = $client->toSchedule($barberId, $hour, $day);
 
