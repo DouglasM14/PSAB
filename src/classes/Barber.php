@@ -48,9 +48,9 @@ class Barber extends Database
         );
     }
 
-    public function verifySchedule()
+    public function verifySchedule($id)
     {
-        $query = $this->select('tb_barber', 'idBarber, unavailabilityBarber', '1');
+        $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = $id");
 
         return json_encode($query);
     }

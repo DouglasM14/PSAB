@@ -52,6 +52,7 @@ to do:
     - Verificar se funcionou horários disponíveis para os clientes
         (O cara que tentou separar-- ----o-s -d-ia-s --da-s horas)
 
+++Filtros
 ++Criptografia
 ++Fazer sistema de Notificação
 ++"Esqueci minha Senha"

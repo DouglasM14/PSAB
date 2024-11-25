@@ -74,13 +74,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </footer>
 
     <script>
-        const barberSchedules = <?= $barberSchedule ?>;
-        const listOperating = <?= $listOperating ?>;
+        var barberSchedule = []
+        var listOperating = []
 
-        function verifyDaysHoursOff(idBarber, type, day, hour) {
-            const barber = barberSchedules.find(b => b.idBarber == idBarber);
-            const unavailability = JSON.parse(barber.unavailabilityBarber);
+        async function fetchBarber(id) {
+            const formData = new FormData();
+            formData.append('barberId', id);
 
+            try {
+                const response = await fetch('../../src/php/getBarberShop.php', {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error fetching data')
+                }
+                const barberShopData = await response.json()
+                
+                barberSchedule = JSON.parse(barberShopData['schedule']);
+                listOperating = barberShopData['operatingHours'];
+                
+                return true;
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+        }
+        
+        async function verifyDaysHoursOff(idBarber, type, day, hour) {
+            const barber = await barberSchedule[0]
+
+            // Faz o 'parse' da string contida em unavailabilityBarber
+            const unavailability = JSON.parse(barber.unavailabilityBarber)
+            console.log(unavailability);
+            
+            // Verifica se o dia ou a hora está indisponível
             return unavailability.some(element => {
                 if (type === 'day') {
                     return element.times.length === 0 && element.date === day;
@@ -96,9 +125,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             return daysOfWeek[i];
         }
 
-        function generateInputsDays(barberId) {
-            const daysListDiv = document.getElementById("daysList");
-            const hoursListDiv = document.getElementById("hoursList");
+        async function generateInputsDays(barberId) {
+            barberSchedule = [];
+            listOperating = [];
+            await fetchBarber(barberId)
+            const daysListDiv = document.getElementById("daysList")
+            const hoursListDiv = document.getElementById("hoursList")
 
             daysListDiv.innerHTML = "";
             hoursListDiv.innerHTML = "";
@@ -113,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 const isoDate = date.toISOString().split("T")[0];
                 const dayOfWeek = generateDaysPortuguese(date.getDay());
                 const formattedDate = date.toLocaleDateString("pt-BR");
-
+                verifyDaysHoursOff(barberId, 'day', isoDate)
                 const isDisabled = listOperating.find(l => l.dayOperating === dayOfWeek) === undefined || verifyDaysHoursOff(barberId, 'day', isoDate);
                 const radio = `<input type="radio" name="day" value="${isoDate}" onclick="generateInputsHours('${isoDate}', ${barberId})" ${isDisabled ? 'disabled' : ''}>`;
                 const label = `<label>${radio} ${formattedDate} - ${dayOfWeek}</label><br>`;
