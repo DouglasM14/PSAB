@@ -44,15 +44,35 @@ class Client extends Database
         }
     }
 
-    public function viewHistoric()
-    {
+    public function viewHistoric($condition = '')
+{
+    // Condição padrão, caso não passe nada
+    if (empty($condition)) {
+        $condition = "tb_schedule.idClient = :idClient";
+        // Aqui usamos o método 'getIdClient' com o parâmetro ':idClient'
         return $this->selectJoin(
             "tb_schedule",
             "tb_barber.photoBarber, tb_barber.nameBarber, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
             "JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
-            "tb_schedule.idClient = {$this->getIdClient()}"
+            $condition,
+            "idClient = {$this->getIdClient()}"  // Passando o valor como parâmetro
         );
+    } else {
+        if (is_array($condition)) {
+            // Se for um array, vamos montar a condição com 'AND'
+            $condi = implode(' AND ', $condition);
+
+            return $this->selectJoin(
+                "tb_schedule",
+                "tb_barber.photoBarber, tb_barber.nameBarber, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
+                "JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
+                $condi
+            );
+        }
     }
+}
+
+
 
     public function cancelAppoitment($hour, $day)
     {
@@ -65,7 +85,7 @@ class Client extends Database
             tb_schedule.dateSchedule = '$day'"
         );
         return "Horário Cancelado!";
-    } 
+    }
     public function viewSchedule()
     {
         $query = $this->selectJoin(

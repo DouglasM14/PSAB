@@ -1,12 +1,13 @@
-<?php 
+<?php
 try {
-    require_once '../../db/Database.php';
-    require_once 'protect.php';
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        require_once 'protect.php';
         if ($_SESSION['typeUser'] == 'client') {
+            require_once '../classes/Client.php';
 
-            $db = new Database();
-            $db->connect();
+            $client = new Client();
+
+            $filter = [];
 
             $day = $_POST['dayFilter'] ?? null;
             $month = $_POST['monthFilter'] ?? null;
@@ -14,33 +15,29 @@ try {
             $status = $_POST['statusFilter'] ?? null;
 
             // Construir $condition dinamicamente
-            $conditions = [];
+            $condition = [];
             if ($day !== null) {
-                $conditions[] = "DATE_FORMAT(tb_schedule.dateSchedule, '%d') = '$day'";
+                $condition[] = "DATE_FORMAT(tb_schedule.dateSchedule, '%d') = '$day'";
             }
             if ($month !== null) {
-                $conditions[] = "DATE_FORMAT(tb_schedule.dateSchedule, '%m') = '$month'";
+                $condition[] = "DATE_FORMAT(tb_schedule.dateSchedule, '%m') = '$month'";
             }
             if ($barber !== null) {
-                $conditions[] = "tb_barber.nameBarber LIKE '%$barber%'";
+                $condition[] = "tb_barber.nameBarber LIKE '%$barber%'";
             }
             if ($status !== null) {
-                $conditions[] = "tb_schedule.stateSchedule = '$status'";
+                $condition[] = "tb_schedule.stateSchedule = '$status'";
             }
 
-            $condition = $conditions ? implode(' AND ', $conditions) : "1";
+            if (!empty($filter)) {
+                $filter = $client->viewHistoric($condition);
+            } else {
+                $filter = $client->viewHistoric();
+            }
 
-            // Chamar o método com o $condition gerado
-            $filter = $db->selectJoin(
-                "tb_schedule",
-                "tb_barber.photoBarber, tb_barber.nameBarber, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
-                "JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
-                $condition
-            );
-
-            echo json_encode([$filter]);
+            echo json_encode($filter);
         }
     }
 } catch (Exception $e) {
-    echo json_encode(['error' => true, 'message' => "Erro inesperado => {$e->getMessage()}"]);
+    echo json_encode(['success' => false, 'message' => "Erro inesperado => {$e->getMessage()}"]);
 }

@@ -96,21 +96,6 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <?php if (!empty($result)) : ?>
-                        <?php foreach ($result as $row) : ?>
-                            <tr>
-                                <td><img src="../../db/uploadBarber/<?= htmlspecialchars($row['photoBarber']) ?>" alt=""></td>
-                                <td><?= htmlspecialchars($row['nameBarber']) ?></td>
-                                <td><?= htmlspecialchars($row['dateSchedule']) ?></td>
-                                <td><?= htmlspecialchars($row['timeSchedule']) ?></td>
-                                <td><?= htmlspecialchars($row['stateSchedule']) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4">Nenhum registro encontrado</td>
-                        </tr>
-                    <?php endif; ?>
                 </tbody>
             </table>
         </section>
@@ -147,11 +132,12 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
                     const tbody = document.getElementById('tableBody');
                     tbody.innerHTML = '';
 
-                    if (data[0].length > 0) {
-                        data[0].forEach(row => {
+                    if (data.length > 0) {
+                        data.forEach(row => {
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                            <td>${row.nameClient}</td>
+                            <td><img src="../../db/uploadBarber/${row.photoBarber}"></td>
+                            <td>${row.nameBarber}</td>
                             <td>${row.dateSchedule}</td>
                             <td>${row.timeSchedule}</td>
                             <td>${row.stateSchedule}</td>
@@ -159,9 +145,8 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
                             tbody.appendChild(tr);
                         });
                     } else {
-                        console.log(data[0]);
                         
-                        tbody.innerHTML = '<tr><td colspan="4">Nenhum registro encontrado</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="5">Nenhum registro encontrado</td></tr>';
                     }
                 })
                 .catch(error => console.error("Erro ao buscar dados:", error));
@@ -174,6 +159,8 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
             document.getElementById('statusFilter').value = '';
             fetchFilter();
         }
+
+        addEventListener('DOMContentLoaded', fetchFilter())
     </script>
 </body>
 

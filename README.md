@@ -39,6 +39,7 @@ se o horario escolhido está disponivel na agenda do barbeiro - AJAX pq tem o di
 
 to do: 
 ++Filtros(Dos históricos)
+++BUG no Schedulling(domingo não é desmarcado)
 ++Criptografia
 ++Alteraçõs precisarem de Senha
 ++Fazer sistema de Notificação
@@ -50,3 +51,6 @@ to do:
     - Mandar os horários para o PHP
     - Salvar o JSON no banco de dados
     - Verificar se funcionou horários disponíveis para os clientes
+
+++Por bindValue em todos os dados
+++Verificar Segurança no Site
