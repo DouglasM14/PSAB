@@ -38,21 +38,15 @@ dias de funcionamento da barbearia com os horarios
 se o horario escolhido está disponivel na agenda do barbeiro - AJAX pq tem o dia e a hora escolhida
 
 to do: 
-++Terminar a pagina scheduling
-    -Tirar o lance do echo nas variaveis
-    -Tirar o js da pagina e colocar como externo
-    -Fazer verificações
-    -Otimizar os codigo js para serem chamados em outros lugares (VERIFICAR SE FAZ SENTIDO OU NÃO, melhor fazer as outras paginas primeiro pra ter certeza)
-    
+++Filtros(Dos históricos)
+++Criptografia
+++Alteraçõs precisarem de Senha
+++Fazer sistema de Notificação
+++"Esqueci minha Senha"
+
 ++fazer o sistema de horários escolher agenda:
     - Mostrar os dias que o Barbeiro tem na agenda(como check box)
     - Mostrar os horários disponíveis para ele escolher(como check box)
     - Mandar os horários para o PHP
     - Salvar o JSON no banco de dados
     - Verificar se funcionou horários disponíveis para os clientes
-        (O cara que tentou separar-- ----o-s -d-ia-s --da-s horas)
-
-++Filtros
-++Criptografia
-++Fazer sistema de Notificação
-++"Esqueci minha Senha"

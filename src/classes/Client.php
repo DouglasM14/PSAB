@@ -65,8 +65,7 @@ class Client extends Database
             tb_schedule.dateSchedule = '$day'"
         );
         return "Horário Cancelado!";
-    }
-
+    } 
     public function viewSchedule()
     {
         $query = $this->selectJoin(

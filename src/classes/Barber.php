@@ -52,7 +52,7 @@ class Barber extends Database
     {
         $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = $id");
 
-        return json_encode($query);
+        return $query;
     }
 
     public function getSchedule()
