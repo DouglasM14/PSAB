@@ -5,15 +5,8 @@ require_once "../../src/classes/Barber.php";
 verifyLogin('barber');
 
 $barber = new Barber($_SESSION['idUser']);
-$result = $barber->viewSchedule();
+$result = $barber->viewTodaySchedule();
 
-function hasPassed($day, $time)
-{
-    $now = new DateTime();
-    $scheduleDateTime = new DateTime("$day $time");
-
-    return $scheduleDateTime <= $now;
-}
 $message = '';
 if (isset($_SESSION['msg'])) {
     $message =  $_SESSION['msg'];
@@ -74,7 +67,7 @@ if (isset($_SESSION['msg'])) {
                     <?php if (!empty($result)) : ?>
                         <?php foreach ($result as $row) : ?>
                             <?php
-                            $passed = hasPassed($row['dateSchedule'], $row['timeSchedule']);
+                            $passed = $barber->hasPassed($row['dateSchedule'], $row['timeSchedule']);
                             ?>
                             <tr>
                                 <td><?php echo date('H:i', strtotime($row['timeSchedule'])); ?></td>
@@ -95,7 +88,7 @@ if (isset($_SESSION['msg'])) {
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td>Nenhum agendamento encontrado.</td>
+                            <td colspan="5">Nenhum agendamento encontrado.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

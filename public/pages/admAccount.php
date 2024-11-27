@@ -12,7 +12,7 @@ $adm = new Adm($_SESSION['idUser']);
 $resultBarber = $adm->viewBarber();
 
 $operating = new Operating();
-$resultOperating = $operating->viewOperatingHours();
+$resultOperating = $operating->viewOperatingHours('all');
 
 $service = new Services();
 $resultService = $service->viewAllServices();

@@ -7,30 +7,6 @@ Coisas para resolver dps, Sim é pra resolver dps.
 
 Lista de Todas as paginas do site: 
 
-o que user faz
-    login
-    logut
-
-o que client faz
-    marca horario
-        visualiza horarios disponiveis
-    edita horario
-    edita informações
-    deleta conta
-
-o que o barbeiro faz
-    visualiza agenda
-    altera agenda
-
-o que o adm faz 
-    tudo que o babeiro e mais isso:
-        cadastra barbeiros
-        deleta barbeios
-        edita info dos barbeiros
-        altera agenda dos barbeiros
-        edita serviços
-
-
 dias e horas indisponiveis barbeiros
 
 dias de funcionamento da barbearia com os horarios
@@ -38,12 +14,7 @@ dias de funcionamento da barbearia com os horarios
 se o horario escolhido está disponivel na agenda do barbeiro - AJAX pq tem o dia e a hora escolhida
 
 to do: 
-++Filtro pra os horários somente do dia na página do barbeiro
-++BUG no Schedulling(domingo não é desmarcado)
 ++Criptografia
-++Alteraçõs precisarem de Senha
-++Fazer sistema de Notificação
-++"Esqueci minha Senha"
 
 ++fazer o sistema de horários escolher agenda:
     - Mostrar os dias que o Barbeiro tem na agenda(como check box)
@@ -52,5 +23,8 @@ to do:
     - Salvar o JSON no banco de dados
     - Verificar se funcionou horários disponíveis para os clientes
 
+++Alteraçõs precisarem de Senha
+++Fazer sistema de Notificação
+++"Esqueci minha Senha"
 ++Por bindValue em todos os dados
 ++Verificar Segurança no Site

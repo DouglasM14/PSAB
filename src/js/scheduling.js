@@ -31,7 +31,7 @@ async function fetchBarber(id) {
     }
 }
 
-async function verifyDaysHoursOff(idBarber, type, day, hour) {
+async function verifyDaysHoursOff(type, day, hour) {
     if (!barberSchedule.length) {
         console.error("Barber schedule is empty");
         return false;
@@ -94,8 +94,11 @@ async function generateInputsDays(barberId) {
         const dayOfWeek = generateDaysPortuguese(date.getDay());
         const formattedDate = date.toLocaleDateString("pt-BR");
 
+        console.log(listOperating);
+        
+
         const isOperating = listOperating.find(l => l.dayOperating === dayOfWeek);
-        const isDisabled = !isOperating || await verifyDaysHoursOff(barberId, 'day', isoDate);
+        const isDisabled = !isOperating || await verifyDaysHoursOff('day', isoDate);
 
         const radio = `<input type="radio" name="day" value="${isoDate}" onclick="generateInputsHours('${isoDate}', ${barberId})" ${isDisabled ? 'disabled' : ''}>`;
         const label = `<label>${radio} ${formattedDate} - ${dayOfWeek}</label><br>`;
@@ -129,7 +132,7 @@ async function generateInputsHours(day, barberId) {
     };
 
     const hoursHTML = await Promise.all(schedule.map(async element => {
-        const isDisabled = await verifyDaysHoursOff(barberId, 'time', day, element) ||
+        const isDisabled = await verifyDaysHoursOff('time', day, element) ||
             dayMarked.includes(element) ||
             actualDay(element);
 

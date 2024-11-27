@@ -81,6 +81,14 @@ class Barber extends Database
         return $query;
     }
 
+    public function hasPassed($day, $time)
+    {
+        $now = new DateTime();
+        $scheduleDateTime = new DateTime("$day $time");
+    
+        return $scheduleDateTime <= $now;
+    }
+
     public function getSchedule()
     {
         $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = {$this->getIdBarber()}");

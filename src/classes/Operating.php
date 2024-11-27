@@ -22,9 +22,13 @@ class Operating extends Database
         }
     }
 
-    public function viewOperatingHours()
+    public function viewOperatingHours($type = '')
     {
-        $query = $this->select("tb_operatinghours");
+        if ($type == "all") {
+            $query = $this->select("tb_operatinghours");
+        } else {
+            $query = $this->select("tb_operatinghours", "*", "stateOperating != 0");
+        }
         return $query;
     }
 
@@ -51,7 +55,7 @@ class Operating extends Database
 
             $this->__construct($id);
 
-            
+
 
             // $this->transaction('commit');
 
