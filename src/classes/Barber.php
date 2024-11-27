@@ -46,14 +46,14 @@ class Barber extends Database
                 "tb_schedule",
                 "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
                 "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
-                "tb_schedule.idBarber = {$this->getIdBarber()}"
+                "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.stateSchedule != 'on'"
             );
         }else{
             $query = $this->selectJoin(
                 "tb_schedule",
                 "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
                 "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
-                $condition
+                "$condition AND tb_schedule.stateSchedule != 'on'"
             );
         }
 

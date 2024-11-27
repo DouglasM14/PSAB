@@ -51,14 +51,14 @@ class Client extends Database
                 "tb_schedule",
                 "tb_barber.photoBarber, tb_barber.nameBarber, tb_schedule.timeSchedule, tb_schedule.dateSchedule, tb_schedule.stateSchedule",
                 "JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
-                "tb_schedule.idClient = {$this->getIdClient()}"
+                "tb_schedule.idClient = {$this->getIdClient()} AND tb_schedule.stateSchedule != 'on'"
             );
         } else {
             $query = $this->selectJoin(
                 "tb_schedule",
                 "tb_barber.photoBarber, tb_barber.nameBarber, tb_schedule.timeSchedule, tb_schedule.dateSchedule, tb_schedule.stateSchedule",
                 "JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
-                $condition
+                "$condition AND tb_schedule.stateSchedule != 'on'"
             );
         }
         return $query;
