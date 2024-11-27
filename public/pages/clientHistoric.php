@@ -11,11 +11,6 @@ $barberList = $barber->barberList();
 
 // Recupera o ID do barbeiro da sessão
 $barberId = $_SESSION['idBarber'] ?? null;
-
-// Realiza o SELECT padrão
-$client = new Client($_SESSION['idUser']);
-$result = $client->viewHistoric(); // Supondo que essa função execute o SELECT fornecido
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,6 +49,10 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
 
     <main>
         <section>
+            <a href="clientAccount.php">Voltar</a>
+        </section>
+
+        <section>
             <h3>Filtrar Histórico</h3>
             <label for="dayFilter">Filtrar por Dia</label>
             <input name="dayFilter" type="date" id="dayFilter">
@@ -65,7 +64,7 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
             <select name="barberFilter" id="barberFilter">
                 <option value=""></option>
                 <?php foreach ($barberList as $b): ?>
-                    <option value="<?= htmlspecialchars($b['idBarber']) ?>"><?= htmlspecialchars($b['nameBarber']) ?></option>
+                    <option value="<?= htmlspecialchars($b['nameBarber']) ?>"><?= htmlspecialchars($b['nameBarber']) ?></option>
                 <?php endforeach; ?>
             </select>
             <br>
@@ -99,10 +98,6 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
                 </tbody>
             </table>
         </section>
-
-        <section>
-            <a href="clientAccount.php">Voltar</a>
-        </section>
     </main>
 
     <footer>
@@ -110,58 +105,7 @@ $result = $client->viewHistoric(); // Supondo que essa função execute o SELECT
         <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
     </footer>
 
-    <script>
-        function fetchFilter() {
-            const day = document.getElementById('dayFilter').value;
-            const month = document.getElementById('monthFilter').value;
-            const barber = document.getElementById('barberFilter').value;
-            const status = document.getElementById('statusFilter').value;
-
-            const formData = new FormData();
-            if (day) formData.append("dayFilter", day);
-            if (month) formData.append("monthFilter", month);
-            if (barber) formData.append("barberFilter", barber);
-            if (status) formData.append("statusFilter", status);
-
-            fetch('../../src/php/filterHistoric.php', {
-                    method: "POST",
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.getElementById('tableBody');
-                    tbody.innerHTML = '';
-
-                    if (data.length > 0) {
-                        data.forEach(row => {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                            <td><img src="../../db/uploadBarber/${row.photoBarber}"></td>
-                            <td>${row.nameBarber}</td>
-                            <td>${row.dateSchedule}</td>
-                            <td>${row.timeSchedule}</td>
-                            <td>${row.stateSchedule}</td>
-                        `;
-                            tbody.appendChild(tr);
-                        });
-                    } else {
-                        
-                        tbody.innerHTML = '<tr><td colspan="5">Nenhum registro encontrado</td></tr>';
-                    }
-                })
-                .catch(error => console.error("Erro ao buscar dados:", error));
-        }
-
-        function cleanFilter() {
-            document.getElementById('dayFilter').value = '';
-            document.getElementById('monthFilter').value = '';
-            document.getElementById('barberFilter').value = '';
-            document.getElementById('statusFilter').value = '';
-            fetchFilter();
-        }
-
-        addEventListener('DOMContentLoaded', fetchFilter())
-    </script>
+    <script src="../../src/js/fetchFilter.js"></script>
 </body>
 
 </html>

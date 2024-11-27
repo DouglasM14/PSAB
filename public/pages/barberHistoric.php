@@ -1,12 +1,15 @@
 <?php
 require_once "../../src/php/protect.php";
-require_once "../../src/classes/Barber.php";
+require_once '../../src/classes/Barber.php';
 
 verifyLogin('barber');
 
-$barber = new Barber($_SESSION['idUser']);
+// Inicializa a lista de barbeiros
+$barber = new Barber();
+$barberList = $barber->barberList();
 
-$result = $barber->viewHistoricBarber();
+// Recupera o ID do barbeiro da sessão
+$barberId = $_SESSION['idBarber'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,29 +48,47 @@ $result = $barber->viewHistoricBarber();
 
     <main>
         <section>
-            <table>
-                <tr>
-                    <th>Nome do cliente</th>
-                    <th>Dia do Corte</th>
-                    <th>Hora do Corte</th>
-                    <th>Status</th>
-                </tr>
-
-                <?php if (!empty($result)) : ?>
-                    <?php foreach ($result as $row) : ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['nameClient'])?></td>
-                            <td><?= htmlspecialchars($row['dateSchedule'])?></td>
-                            <td><?= htmlspecialchars($row['timeSchedule'])?></td>
-                            <td><?= htmlspecialchars($row['stateSchedule'])?></td>
-                        </tr>
-                    <?php endforeach ?>
-                <?php endif ?>
-            </table>
+            <a href="barberAccount.php">Voltar</a>
         </section>
 
         <section>
-            <a href="barberAccount.php">Voltar</a>
+            <h3>Filtrar Histórico</h3>
+            <label for="dayFilter">Filtrar por Dia</label>
+            <input name="dayFilter" type="date" id="dayFilter">
+            <br>
+
+            <label for="monthFilter">Filtrar por Mês</label>
+            <input name="monthFilter" type="month" id="monthFilter">
+            <br>
+
+            <label for="statusFilter">Filtrar por Status</label>
+            <select name="statusFilter" id="statusFilter">
+                <option value=""></option>
+                <option value="on">Ativo</option>
+                <option value="end">Concluído</option>
+                <option value="cancel">Cancelado</option>
+                <option value="absent">Ausente</option>
+            </select>
+            <br>
+            <button onclick="fetchFilter()">Buscar</button>
+            <button onclick="cleanFilter()">Limpar Filtros</button>
+            <br>
+        </section>
+
+        <section>
+            <h3>Histórico</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Cliente</th>
+                        <th>Dia do Corte</th>
+                        <th>Hora do Corte</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
         </section>
     </main>
 
@@ -75,6 +96,7 @@ $result = $barber->viewHistoricBarber();
         <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
     </footer>
+    <script src="../../src/js/fetchFilter.js"></script>
 </body>
 
 </html>

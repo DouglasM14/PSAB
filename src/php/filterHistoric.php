@@ -1,41 +1,54 @@
 <?php
 try {
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if ($_SERVER['REQUEST_METHOD'] === "POST") {
         require_once 'protect.php';
-        if ($_SESSION['typeUser'] == 'client') {
+
+        $day = $_POST['dayFilter'] ?? null;
+        $month = $_POST['monthFilter'] ?? null;
+        $barber = $_POST['barberFilter'] ?? null;
+        $client = $_POST['clientFilter'] ?? null;
+        $status = $_POST['statusFilter'] ?? null;
+
+        $class = null;
+        $method = null;
+
+        if ($_SESSION['typeUser'] === 'client') {
             require_once '../classes/Client.php';
+            $class = new Client($_SESSION['idUser']);
+            $method = 'viewHistoric';
+        } else if ($_SESSION['typeUser'] === 'barber') {
+            require_once '../classes/Barber.php';
+            $class = new Barber($_SESSION['idUser']);
+            $method = 'viewHistoricBarber';
+        }
 
-            $client = new Client();
+        if ($class && $method) {
+            $conditions = [];
 
-            $filter = [];
-
-            $day = $_POST['dayFilter'] ?? null;
-            $month = $_POST['monthFilter'] ?? null;
-            $barber = $_POST['barberFilter'] ?? null;
-            $status = $_POST['statusFilter'] ?? null;
-
-            // Construir $condition dinamicamente
-            $condition = [];
             if ($day !== null) {
-                $condition[] = "DATE_FORMAT(tb_schedule.dateSchedule, '%d') = '$day'";
+                $conditions[] = "tb_schedule.dateSchedule = '$day'";
             }
             if ($month !== null) {
-                $condition[] = "DATE_FORMAT(tb_schedule.dateSchedule, '%m') = '$month'";
+                $monthValue = substr($month, 0, 7);
+                $conditions[] = "DATE(tb_schedule.dateSchedule) LIKE '{$monthValue}%'";
             }
-            if ($barber !== null) {
-                $condition[] = "tb_barber.nameBarber LIKE '%$barber%'";
+            if ($_SESSION['typeUser'] === 'client' && $barber !== null) {
+                $conditions[] = "tb_barber.nameBarber = '$barber'";
+            }
+            if ($_SESSION['typeUser'] === 'barber' && $client !== null) {
+                $conditions[] = "tb_client.nameClient = '$client'";
             }
             if ($status !== null) {
-                $condition[] = "tb_schedule.stateSchedule = '$status'";
+                $conditions[] = "tb_schedule.stateSchedule = '$status'";
             }
 
-            if (!empty($filter)) {
-                $filter = $client->viewHistoric($condition);
-            } else {
-                $filter = $client->viewHistoric();
-            }
+            $conditionString = implode(' AND ', $conditions);
 
-            echo json_encode($filter);
+            $result = $class->$method($conditionString);
+
+            echo json_encode($result);
+        } else {
+            throw new Exception("Tipo de usuário inválido.");
         }
     }
 } catch (Exception $e) {

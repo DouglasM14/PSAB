@@ -38,7 +38,7 @@ dias de funcionamento da barbearia com os horarios
 se o horario escolhido está disponivel na agenda do barbeiro - AJAX pq tem o dia e a hora escolhida
 
 to do: 
-++Filtros(Dos históricos)
+++Filtro pra os horários somente do dia na página do barbeiro
 ++BUG no Schedulling(domingo não é desmarcado)
 ++Criptografia
 ++Alteraçõs precisarem de Senha

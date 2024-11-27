@@ -39,13 +39,25 @@ class Barber extends Database
         return $query;
     }
 
-    public function viewHistoricBarber(){
-        return $this->selectJoin(
-            "tb_schedule",
-            "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
-            "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
-            "tb_schedule.idBarber = {$this->getIdBarber()}"
-        );
+    public function viewHistoricBarber($condition = '')
+    {
+        if (empty($condition)) {
+            $query = $this->selectJoin(
+                "tb_schedule",
+                "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
+                "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+                "tb_schedule.idBarber = {$this->getIdBarber()}"
+            );
+        }else{
+            $query = $this->selectJoin(
+                "tb_schedule",
+                "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
+                "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+                $condition
+            );
+        }
+
+        return $query;
     }
 
     public function verifySchedule($id)
@@ -64,14 +76,14 @@ class Barber extends Database
 
     public function barberAlterStateSchedule($state, $hour, $day)
     {
-            $this->updateSingle(
-                "tb_schedule",
-                "stateSchedule",
-                $state,
-                "tb_schedule.idBarber = {$this->getIdBarber()} AND 
+        $this->updateSingle(
+            "tb_schedule",
+            "stateSchedule",
+            $state,
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND 
                 tb_schedule.timeSchedule = '$hour' AND 
                 tb_schedule.dateSchedule = '$day'"
-            );
+        );
     }
 
 
