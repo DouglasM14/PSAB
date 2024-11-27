@@ -87,6 +87,21 @@ class Client extends Database
         return $query;
     }
 
+    public function viewTodaySchedule()
+    {
+        $now = new DateTime();
+        $day = date_format($now, 'Y-m-d');
+
+        $query = $this->selectJoin(
+            "tb_schedule",
+            "*",
+            "INNER JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
+            "idClient = '{$this->getIdClient()}' AND stateSchedule = 'on'
+            AND tb_schedule.dateSchedule = '$day'"
+        );
+        return $query;
+    }
+
     public function registerClient($name, $email, $password)
     {
         try {

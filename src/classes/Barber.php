@@ -39,6 +39,20 @@ class Barber extends Database
         return $query;
     }
 
+    public function viewTodaySchedule()
+    {
+        $now = new DateTime();
+        $day = date_format($now, 'Y-m-d');
+        $query = $this->selectJoin(
+            "tb_schedule",
+            "*",
+            "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient AND tb_schedule.stateSchedule = 'on'
+            AND tb_schedule.dateSchedule = '$day'"
+        );
+        return $query;
+    }
+
     public function viewHistoricBarber($condition = '')
     {
         if (empty($condition)) {
@@ -48,7 +62,7 @@ class Barber extends Database
                 "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
                 "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.stateSchedule != 'on'"
             );
-        }else{
+        } else {
             $query = $this->selectJoin(
                 "tb_schedule",
                 "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
