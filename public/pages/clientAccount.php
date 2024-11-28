@@ -6,21 +6,25 @@ verifyLogin('client');
 
 $client = new Client($_SESSION['idUser']);
 $result = $client->viewTodaySchedule();
-$message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $name = htmlspecialchars($_POST['nameClient']);
     $email = htmlspecialchars($_POST['emailClient']);
     $pass = htmlspecialchars($_POST['passwordClient']);
-
+    
     $message = $client->updateClient($name, $email, $pass, $_SESSION['idUser']);
     $_SESSION['msg'] = $message;
 }
 
+$message = '';
 if (isset($_SESSION['msg'])) {
     $message = $_SESSION['msg'];
     unset($_SESSION['msg']);
 }
+
+echo "<pre>"; 
+print_r($_SESSION);
+echo "</pre>";
 ?>
 
 <!DOCTYPE html>

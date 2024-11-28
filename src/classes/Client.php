@@ -12,7 +12,7 @@ class Client extends Database
     {
         $this->connect();
         if ($idUser != '') {
-            $query = $this->select("tb_client", "*", "idUser = '{$idUser}' LIMIT 1;");
+            $query = $this->select("tb_client", "*", "idUser = '{$idUser}' LIMIT 1");
             $this->setIdClient($query[0]['idClient']);
             $this->setNameClient($query[0]['nameClient']);
             $this->setEmailClient($query[0]['emailClient']);
@@ -113,9 +113,11 @@ class Client extends Database
                 throw new Exception('Esse E-mail já é cadastrado.');
             }
 
+            $passCrypt = password_hash($password, PASSWORD_BCRYPT);
+
             $dataLogin = [
                 'emailUser' => $email,
-                'passwordUser' => $password,
+                'passwordUser' => $passCrypt,
                 'typeUser' => 'client'
             ];
 
@@ -126,7 +128,7 @@ class Client extends Database
             $dataClient = [
                 'nameClient' => $name,
                 'emailClient' => $email,
-                'passwordClient' => $password,
+                'passwordClient' => $passCrypt,
                 'idUser' => $lastId
             ];
 
@@ -184,8 +186,9 @@ class Client extends Database
             }
 
             if ($p != $this->getPasswordClient()) {
-                $dataC["passwordClient"] = $p;
-                $dataU["passwordUser"] = $p;
+                $passCrypt = password_hash($p, PASSWORD_BCRYPT);
+                $dataC["passwordClient"] = $passCrypt;
+                $dataU["passwordUser"] = $passCrypt;
             }
 
             // $this->transaction('start');

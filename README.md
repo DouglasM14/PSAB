@@ -23,6 +23,7 @@ to do:
     - Salvar o JSON no banco de dados
     - Verificar se funcionou horários disponíveis para os clientes
 
+++Alterar uma hora de pausa geral para a barbearia
 ++Alteraçõs precisarem de Senha
 ++Fazer sistema de Notificação
 ++"Esqueci minha Senha"
