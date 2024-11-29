@@ -1,23 +1,22 @@
 <?php
 require_once "../../src/php/protect.php";
 require_once "../../src/classes/Barber.php";
+require_once "../../src/php/imageConstructor.php";
+
+verifyLogin('adm');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['nameBarber'];
-    $email = $_POST['emailBarber'];
-    $pass = $_POST['passwordBarber'];
-    $photo = $_POST['photoBarber'];
+    $name = isset($_POST['nameBarber']) ? $_POST['nameBarber'] : null;
+    $email = isset($_POST['emailBarber']) ? $_POST['emailBarber'] : null;
+    $pass = isset($_POST['passwordBarber']) ? $_POST['passwordBarber'] : null;
 
-    $barber = new Barber($_SESSION['idBarber']);
+    $photo = imageConstructor($_FILES['photoBarber']);
 
-    $register = $barber->registerBarber($name, $email, $pass);
+    $barber = new Barber();
 
-    // echo "<pre>";
-    // print_r($register);
-    // echo "</pre>";
+    $barber->registerBarber($name, $email, $pass, $photo);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -34,21 +33,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <main>
         <section>
-            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
+            <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST" enctype="multipart/form-data">
                 <div>
                     <label for="nameBarber">Nome: </label>
-                    <input type="text" name="nameBarber" id="">
+                    <input type="text" name="nameBarber">
                 </div>
 
                 <div>
                     <label for="emailBarber">Email: </label>
-                    <input type="text" name="emailBarber" id="">
+                    <input type="text" name="emailBarber">
                 </div>
-
-                <!-- <div>
-                    <label for="emailBarber">Agenda: </label>
-                    <input type="text" name="emailBarber" id="">
-                </div> -->
 
                 <div>
                     <label for="passwordBarber">Senha: </label>
@@ -64,10 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div>
                     <label for="photoBarber">Foto: </label>
-                    <input type="file" name="photoBarber" id="">
+                    <input type="file" name="photoBarber">
                 </div>
 
-                <input type="submit" value="Se cadastrar">
+                <input type="submit" value="Cadastrar barbeiro">
             </form>
         </section>
 

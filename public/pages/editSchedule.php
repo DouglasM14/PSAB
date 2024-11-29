@@ -6,16 +6,6 @@ verifyLogin('barber');
 
 $barber = new Barber($_SESSION['idUser']);
 
-$barberSchedule = json_decode($barber->verifySchedule());
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    # code...
-}
-
-// echo "<pre>";
-// print_r($barberSchedule);
-// echo "</pre>";
-
 ?>
 
 <!DOCTYPE html>
@@ -54,36 +44,38 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <p>
                 <a href="barberAccount.php">Voltar</a>
             </p>
-
-            <section>
-                <h2>Editar a agenda</h2>
-
-                <div>
-                    <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
-                        <div>
-                            <h3>Alterar dias de trabalho:</h3>
-                            <?php
-
-                            foreach ($barberSchedule as $obj) {
-                                $unavailability = json_decode($obj->unavailabilityBarber, true);
-
-                                foreach ($unavailability['unavailable'] as $item) {
-                                    $date = $item['date'];
-                                    echo "<input type='checkbox' name='unavailability' value='$date' true> $date <br>";
-                                    
-                                    foreach ($item['times'] as $time) {
-                                        echo "<input type='checkbox' name='unavailability' value='$date $time' true>  $time<br>";
-                                    }
-                                }
-                            }
-                            ?>
-                        </div>
-
-                    </form>
-                </div>
-            </section>
         </section>
 
+        <section>
+            <h2>Editar a agenda</h2>
+            <label for="daysHours">Escolha se deseja desativar dia ou hora</label>
+            <br>
+            <label for="days">
+                <input type="radio" name="daysHours" id="days" onclick="generateInputsDaysHours('days')"> Dia Inteiro
+            </label>
+            <br>
+            <label for="hours">
+                <input type="radio" name="daysHours" id="hours" onclick="generateInputsDaysHours('hours')"> Horário Específico
+            </label>
+            <br>
+            <div id="inputContainer"></div>
+            <br>
+            <button onclick="postBarberDayOff('desativate')">Desativar</button>
+            <button onclick="postBarberDayOff('ativate')">Ativar</button>
+        </section>
+
+        <section>
+            <h3>Horários desativados</h3>
+            <table>
+                <thead>
+
+                    <th>Dia</th>
+                    <th>Hora</th>
+                </thead>
+
+                <tbody id="tbody"></tbody>
+            </table>
+        </section>
 
     </main>
 
@@ -91,6 +83,107 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <p>Site desenvolvido por Nexiun Technologies</p>
         <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
     </footer>
+
+    <script>
+        function generateInputsDaysHours(option) {
+            const inputContainer = document.getElementById('inputContainer');
+            inputContainer.innerHTML = ''; // Limpa os inputs anteriores
+
+            // Cria o input de data
+            const inputDate = document.createElement('input');
+            inputDate.type = 'date';
+            inputDate.name = 'date';
+            inputDate.id = 'inputDate';
+            inputContainer.appendChild(inputDate);
+
+            if (option === 'hours') {
+                // Cria o input de hora apenas para a opção 'hours'
+                const inputTime = document.createElement('input');
+                inputTime.type = 'time';
+                inputTime.name = 'time';
+                inputTime.id = 'inputTime';
+                inputContainer.appendChild(inputTime);
+            }
+        }
+
+
+        async function postBarberDayOff(action) {
+            try {
+                const inputDate = document.getElementById('inputDate');
+                const inputTime = document.getElementById('inputTime');
+
+                if (!inputDate || !inputDate.value) {
+                    alert('Por favor, selecione uma data.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('date', inputDate.value);
+
+                if (inputTime && inputTime.value) {
+                    formData.append('time', inputTime.value);
+                }
+
+                if (action === 'ativate') {
+                    formData.append('option', "ativate")
+                } else if (action === 'desative') {
+                    formData.append('option', "desativate")
+                }
+
+                const response = await fetch("../../src/php/getUnavibility.php?", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao enviar os dados. Tente novamente.');
+                }
+
+                const data = await response.json();
+                console.log(data);
+
+                await getBarberDayOff()
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function getBarberDayOff() {
+            try {
+                const response = await fetch("../../src/php/getUnavibility.php");
+
+                if (!response.ok) {
+                    throw new Error("Erro ao pegar os dados.");
+                }
+
+                const data = await response.json();
+                const daysOff = JSON.parse(data)
+                console.log(daysOff);
+
+                const tbody = document.getElementById('tbody');
+                tbody.innerHTML = ''; // Limpa o corpo da tabela
+
+                if (daysOff.length > 0) {
+                    daysOff.forEach(element => {
+                        if (element.date && element.times && element.times.length > 0) {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                        <td>${element.date}</td>
+                        <td>${element.times.join(', ')}</td>
+                    `;
+                            tbody.appendChild(tr);
+                        }
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="2">Nenhum horário desmarcado</td></tr>';
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        addEventListener("DOMContentLoaded", getBarberDayOff())
+    </script>
 </body>
 
 </html>

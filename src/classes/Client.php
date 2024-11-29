@@ -12,32 +12,92 @@ class Client extends Database
     {
         $this->connect();
         if ($idUser != '') {
-            $query = $this->select("tb_client", "*", "idUser = '{$idUser}' LIMIT 1;");
+            $query = $this->select("tb_client", "*", "idUser = '{$idUser}' LIMIT 1");
             $this->setIdClient($query[0]['idClient']);
             $this->setNameClient($query[0]['nameClient']);
             $this->setEmailClient($query[0]['emailClient']);
             $this->setPasswordClient($query[0]['passwordClient']);
         }
     }
-    
+
     public function toSchedule($barber, $time, $date)
     {
-        $data = [
-            'dateSchedule' => $date,
-            'timeSchedule' => $time,
-            'idClient' => $this->getIdClient(),
-            'idBarber' => $barber
-        ];
-        $this->insert('tb_schedule', $data);
+        $select = $this->selectJoin(
+            "tb_schedule",
+            "tb_client.nameClient",
+            "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+            "tb_schedule.timeSchedule = '$time' AND tb_schedule.dateSchedule = '$date'"
+        );
+
+        if (count($select) > 0) {
+            return "Você já esta cadastrado com outro Barbeiro neste Mesmo horário";
+        } else {
+            $data = [
+                'dateSchedule' => $date,
+                'timeSchedule' => $time,
+                'idClient' => $this->getIdClient(),
+                'idBarber' => $barber
+            ];
+            $this->insert('tb_schedule', $data);
+
+            return "Horário marcado com sucesso";
+        }
     }
 
+    public function viewHistoric($condition = '')
+    {
+        if (empty($condition)) {
+            $query = $this->selectJoin(
+                "tb_schedule",
+                "tb_barber.photoBarber, tb_barber.nameBarber, tb_schedule.timeSchedule, tb_schedule.dateSchedule, tb_schedule.stateSchedule",
+                "JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
+                "tb_schedule.idClient = {$this->getIdClient()} AND tb_schedule.stateSchedule != 'on'"
+            );
+        } else {
+            $query = $this->selectJoin(
+                "tb_schedule",
+                "tb_barber.photoBarber, tb_barber.nameBarber, tb_schedule.timeSchedule, tb_schedule.dateSchedule, tb_schedule.stateSchedule",
+                "JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
+                "$condition AND tb_schedule.stateSchedule != 'on'"
+            );
+        }
+        return $query;
+    }
+
+    public function cancelAppoitment($hour, $day)
+    {
+        $this->updateSingle(
+            "tb_schedule",
+            "stateSchedule",
+            'cancel',
+            "tb_schedule.idClient = {$this->getIdClient()} AND
+            tb_schedule.timeSchedule = '$hour' AND
+            tb_schedule.dateSchedule = '$day'"
+        );
+        return "Horário Cancelado!";
+    }
     public function viewSchedule()
     {
         $query = $this->selectJoin(
             "tb_schedule",
-            "nameBarber, dateSchedule, timeSchedule",
+            "*",
             "INNER JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
-            "idClient = '{$this->getIdClient()}'"
+            "idClient = '{$this->getIdClient()}' AND stateSchedule = 'on'"
+        );
+        return $query;
+    }
+
+    public function viewTodaySchedule()
+    {
+        $now = new DateTime();
+        $day = date_format($now, 'Y-m-d');
+
+        $query = $this->selectJoin(
+            "tb_schedule",
+            "*",
+            "INNER JOIN tb_barber ON tb_schedule.idBarber = tb_barber.idBarber",
+            "idClient = '{$this->getIdClient()}' AND stateSchedule = 'on'
+            AND tb_schedule.dateSchedule = '$day'"
         );
         return $query;
     }
@@ -53,9 +113,11 @@ class Client extends Database
                 throw new Exception('Esse E-mail já é cadastrado.');
             }
 
+            $passCrypt = password_hash($password, PASSWORD_BCRYPT);
+
             $dataLogin = [
                 'emailUser' => $email,
-                'passwordUser' => $password,
+                'passwordUser' => $passCrypt,
                 'typeUser' => 'client'
             ];
 
@@ -66,13 +128,20 @@ class Client extends Database
             $dataClient = [
                 'nameClient' => $name,
                 'emailClient' => $email,
-                'passwordClient' => $password,
+                'passwordClient' => $passCrypt,
                 'idUser' => $lastId
             ];
 
             $this->insert('tb_client', $dataClient);
             $this->transaction('commit');
 
+            if(!isset($_SESSION)){
+                session_start();
+            }
+
+            $_SESSION['typeUser'] = 'client';
+            $_SESSION['idUser'] = $lastId;
+            
             header("location: clientAccount.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');
@@ -86,7 +155,7 @@ class Client extends Database
             $appointments = $this->select("tb_schedule", "*", "idClient = '{$this->getIdClient()}'");
 
             $this->transaction('start');
-            
+
             if (count($appointments) > 0) {
                 throw new Exception('A conta ainda tem horários marcados.');
             } else {
@@ -95,7 +164,7 @@ class Client extends Database
             }
 
             $this->transaction('commit');
-            
+
             header("location: ../../public/index2.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');
@@ -106,14 +175,14 @@ class Client extends Database
     public function updateClient($n, $e, $p, $id)
     {
         try {
-            
+
             $dataC = []; // dados alterados para a tabela client
             $dataU = []; // dados alterados para a tabela user
-            
+
             if ($n != $this->getNameClient()) {
                 $dataC["nameClient"] = $n;
             }
-            
+
             if ($e != $this->getEmailClient()) {
                 $checkEmail = $this->select("tb_client", "emailClient", "emailClient = '{$e}' LIMIT 1");
                 if (count($checkEmail) > 0) {
@@ -124,12 +193,13 @@ class Client extends Database
             }
 
             if ($p != $this->getPasswordClient()) {
-                $dataC["passwordClient"] = $p;
-                $dataU["passwordUser"] = $p;
+                $passCrypt = password_hash($p, PASSWORD_BCRYPT);
+                $dataC["passwordClient"] = $passCrypt;
+                $dataU["passwordUser"] = $passCrypt;
             }
 
             // $this->transaction('start');
-            
+
             if (!empty($dataC)) {
                 $this->update('tb_client', $dataC, "idUser = '{$id}'");
                 if (!empty($dataU)) {
@@ -140,7 +210,7 @@ class Client extends Database
                 throw new Exception('Nenhum Dado foi alterado.');
             }
             // $this->transaction('commit');
-            
+
             return 'Dados atualizados com Sucesso';
         } catch (Exception $e) {
             // $this->transaction('rollBack');

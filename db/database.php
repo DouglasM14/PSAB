@@ -55,6 +55,14 @@ class Database
         return $stmt->execute();
     }
 
+    public function updateSingle($table, $field, $value, $condition)
+    {
+        $sql = "UPDATE $table SET $field = :value WHERE $condition";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':value', $value);
+        return $stmt->execute();
+    }
+
     public function select($table, $columns = "*", $condition = "1")
     {
         $sql = "SELECT $columns FROM $table WHERE $condition";

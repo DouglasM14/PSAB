@@ -5,30 +5,7 @@ require_once "../../src/classes/Client.php";
 verifyLogin('client');
 
 $client = new Client($_SESSION['idUser']);
-$result = $client->viewTodaySchedule();
-
-echo "<pre>"; 
-print_r($result);
-echo "</pre>";
-
-if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $name = htmlspecialchars($_POST['nameClient']);
-    $email = htmlspecialchars($_POST['emailClient']);
-    $pass = htmlspecialchars($_POST['passwordClient']);
-    
-    $message = $client->updateClient($name, $email, $pass, $_SESSION['idUser']);
-    $_SESSION['msg'] = $message;
-}
-
-$message = '';
-if (isset($_SESSION['msg'])) {
-    $message = $_SESSION['msg'];
-    unset($_SESSION['msg']);
-}
-
-// echo "<pre>"; 
-// print_r($_SESSION);
-// echo "</pre>";
+$result = $client->viewSchedule();
 ?>
 
 <!DOCTYPE html>
@@ -67,48 +44,14 @@ if (isset($_SESSION['msg'])) {
 
     <main>
         <h2>Bem vindo <?= htmlspecialchars($client->getNameClient()) ?></h2>
-
-        <?php if ($message): ?>
-            <p><?= htmlspecialchars($message) ?></p>
-        <?php endif; ?>
-
         <section>
-            <p><a href="scheduling.php">Marque um horário aqui</a></p>
-            <p><a href="clientSchedule.php">Veja sua Agenda</a></p>
-            <p><a href="clientHistoric.php">Veja seu histórico</a></p>
-            <p><a href="../pages/services.php">Ver serviços</a></p>
-            <p><a href="../../src/php/delete.php">Delete sua conta</a></p>
-            <p><a href="../../src/php/logout.php">Sair</a></p>
+            <p><a href="clientAccount.php">Voltar</a></p>
         </section>
 
         <section>
-            <h2>Editar informações</h2>
-            <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
-                <div>
-                    <label for="nameClient">Nome:</label>
-                    <input name="nameClient" value="<?= htmlspecialchars($client->getNameClient()) ?>" type="text" id="nameClient" required>
-                </div>
-
-                <div>
-                    <label for="emailClient">Email:</label>
-                    <input name="emailClient" value="<?= htmlspecialchars($client->getEmailClient()) ?>" type="email" id="emailClient" required>
-                </div>
-
-                <div>
-                    <label for="passwordClient">Senha:</label>
-                    <input name="passwordClient" value="" type="password" id="passwordClient" required>
-                </div>
-
-                <div>
-                    <button type="submit">Alterar</button>
-                </div>
-            </form>
-        </section>
-
-        <section>
-            <h3>Horários de Hoje</h3>
+            <h3>Horários Agendados</h3>
             <table>
-                <tr>
+            <tr>
                     <th>Foto do Barbeiro</th>
                     <th>Nome do Barbeiro</th>
                     <th>Horário</th>

@@ -8,6 +8,7 @@ class Services extends Database
     private $priceService;
     private $descService;
     private $expPriceService;
+    private $iconService;
 
     function __construct($id = '')
     {
@@ -19,6 +20,7 @@ class Services extends Database
             $this->setdescService($query[0]['descService']);
             $this->setPriceService($query[0]['priceService']);
             $this->setExpPriceService($query[0]['expPriceService']);
+            $this->setIconService($query[0]['iconService']);
         }
     }
 
@@ -28,16 +30,8 @@ class Services extends Database
         return $query;
     }
 
-    // public function detailService($id)
-    // {
-    //     $query = $this->select("tb_service", "*", "idService = '{$id}'");
-    //     $this->setNameService($query[0]['nameService']);
-    //     $this->setdescService($query[0]['descService']);
-    //     $this->setPriceService($query[0]['priceService']);
-    //     $this->setExpPriceService($query[0]['expPriceService']);
-    // }
-
-    public function insertService($name, $desc, $price, $expPrice) {
+    public function insertService($name, $desc, $price, $expPrice, $icon)
+    {
         try {
             $this->transaction('start');
 
@@ -45,7 +39,8 @@ class Services extends Database
                 'nameService' => $name,
                 'descService' => $desc,
                 'priceService' => $price,
-                'expPriceService' => $expPrice
+                'expPriceService' => $expPrice,
+                'iconService' => $icon
             ];
 
             $this->insert('tb_service', $data);
@@ -59,7 +54,7 @@ class Services extends Database
         }
     }
 
-    public function updateService($chosenId, $name, $desc, $price, $expPrice)
+    public function updateService($chosenId, $name, $desc, $price, $expPrice, $photo)
     {
         try {
             $data = []; // dados alterados para a tabela client
@@ -78,6 +73,10 @@ class Services extends Database
 
             if ($expPrice != $this->getExpPriceService()) {
                 $data["expPriceService"] = $expPrice;
+            }
+
+            if($photo != $this->getIconService()){
+                $data['iconService'] = $photo;
             }
 
             // $this->transaction('start');
@@ -158,5 +157,15 @@ class Services extends Database
     public function setdescService($descService)
     {
         return $this->descService = $descService;
+    }
+
+    public function getIconService()
+    {
+        return $this->iconService;
+    }
+
+    public function setIconService($iconService)
+    {
+        return $this->iconService = $iconService;
     }
 }

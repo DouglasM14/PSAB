@@ -8,8 +8,7 @@ class Barber extends Database
     private $nameBarber;
     private $emailBarber;
     private $passwordBarber;
-    private $imageBarber;
-    private $dirImageBarber;
+    private $photoBarber;
 
     function __construct($id = '', $type = '')
     {
@@ -24,6 +23,7 @@ class Barber extends Database
             $this->setNameBarber($query[0]['nameBarber']);
             $this->setEmailBarber($query[0]['emailBarber']);
             $this->setPasswordBarber($query[0]['passwordBarber']);
+            $this->setPhotoBarber($query[0]['photoBarber']);
             $this->setIdUser($query[0]['idUser']);
         }
     }
@@ -32,22 +32,84 @@ class Barber extends Database
     {
         $query = $this->selectJoin(
             "tb_schedule",
-            "nameClient, dateSchedule, timeSchedule",
+            "*",
             "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
-            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient"
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient AND tb_schedule.stateSchedule = 'on'"
         );
         return $query;
     }
 
-    public function verifySchedule()
+    public function viewTodaySchedule()
     {
-        $query = $this->select('tb_barber', 'idBarber, unavailabilityBarber', 'idBarber = ' . $this->getIdBarber());
-
-        return json_encode($query);
-        // return $query;
+        $now = new DateTime();
+        $day = date_format($now, 'Y-m-d');
+        $query = $this->selectJoin(
+            "tb_schedule",
+            "*",
+            "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.idClient = tb_client.idClient AND tb_schedule.stateSchedule = 'on'
+            AND tb_schedule.dateSchedule = '$day'"
+        );
+        return $query;
     }
 
-    public function registerBarber($name, $email, $password)
+    public function viewHistoricBarber($condition = '')
+    {
+        if (empty($condition)) {
+            $query = $this->selectJoin(
+                "tb_schedule",
+                "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
+                "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+                "tb_schedule.idBarber = {$this->getIdBarber()} AND tb_schedule.stateSchedule != 'on'"
+            );
+        } else {
+            $query = $this->selectJoin(
+                "tb_schedule",
+                "tb_client.nameClient, tb_schedule.dateSchedule, tb_schedule.timeSchedule, tb_schedule.stateSchedule",
+                "JOIN tb_client ON tb_schedule.idClient = tb_client.idClient",
+                "$condition AND tb_schedule.stateSchedule != 'on'"
+            );
+        }
+
+        return $query;
+    }
+
+    public function verifySchedule($id)
+    {
+        $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = $id");
+
+        return $query;
+    }
+
+    public function hasPassed($day, $time)
+    {
+        $now = new DateTime();
+        $scheduleDateTime = new DateTime("$day $time");
+
+        return $scheduleDateTime <= $now;
+    }
+
+    public function getSchedule()
+    {
+        $query = $this->select('tb_barber', 'unavailabilityBarber', "idBarber = {$this->getIdBarber()}");
+
+        return $query;
+    }
+
+    public function barberAlterStateSchedule($state, $hour, $day)
+    {
+        $this->updateSingle(
+            "tb_schedule",
+            "stateSchedule",
+            $state,
+            "tb_schedule.idBarber = {$this->getIdBarber()} AND 
+                tb_schedule.timeSchedule = '$hour' AND 
+                tb_schedule.dateSchedule = '$day'"
+        );
+    }
+
+
+    public function registerBarber($name, $email, $password, $photo)
     {
         try {
             $this->transaction('start');
@@ -58,16 +120,18 @@ class Barber extends Database
                 throw new Exception('Esse E-mail já é cadastrado.');
             }
 
+            $passCry = password_hash($password, PASSWORD_BCRYPT);
+
             $dataLogin = [
                 'emailUser' => $email,
-                'passwordUser' => $password,
+                'passwordUser' => $passCry,
                 'typeUser' => 'barber'
             ];
 
             $scheduleDefault = [
-                'unavaible' => [
-                    'date' => "",
-                    'times' => []
+                [
+                    "date" => "",
+                    "times" => [""]
                 ]
             ];
 
@@ -78,8 +142,9 @@ class Barber extends Database
             $dataBarber = [
                 'nameBarber' => $name,
                 'emailBarber' => $email,
-                'passwordBarber' => $password,
+                'passwordBarber' => $passCry,
                 'unavailabilityBarber' => json_encode($scheduleDefault),
+                'photoBarber' => $photo,
                 'idUser' => $lastId
             ];
 
@@ -105,6 +170,9 @@ class Barber extends Database
             } else {
                 $this->delete('tb_barber', "idUser = '{$this->getIdUser()}'");
                 $this->delete('tb_userLogin', "idUser = '{$this->getIdUser()}'");
+                $serverPath = __DIR__ . '/../../db/uploadBarber/';
+                $filePath = $serverPath . $this->getPhotoBarber();
+                unlink($filePath);
             }
 
             $this->transaction('commit');
@@ -114,7 +182,12 @@ class Barber extends Database
         }
     }
 
-    public function updateBarber($n, $e, $p)
+    public function updateBarberSchedule($schedule) {
+        $schedule = json_encode($schedule);
+        $this->updateSingle("tb_barber", "unavailabilityBarber", $schedule, "idBarber = {$this->getIdBarber()}");
+    }
+
+    public function updateBarber($n, $e, $p, $f)
     {
         try {
             $dataB = []; // dados alterados para a tabela Barber
@@ -138,16 +211,16 @@ class Barber extends Database
                 $dataU["passwordUser"] = $p;
             }
 
-
-
-            $datas = [$dataB, $dataU];
-            // return $datas;
+            $dataB['photoBarber'] = $f;
 
             // $this->transaction('start');
 
             if (!empty($dataB)) {
                 $this->update('tb_barber', $dataB, "idUser = '{$this->getIdUser()}'");
-                // return $this->select('tb_barber', "*","idUser = '{$this->getIdUser()}'");
+
+                $serverPath = __DIR__ . '/../../db/uploadBarber/';
+                $filePath = $serverPath . $this->getPhotoBarber();
+                unlink($filePath);
 
                 if (!empty($dataU)) {
                     $this->update('tb_userLogin', $dataU, "idUser = '{$this->getIdUser()}'");
@@ -212,24 +285,14 @@ class Barber extends Database
         return $this->passwordBarber = $passwordBarber;
     }
 
-    public function getImageBarber()
+    public function getPhotoBarber()
     {
-        return $this->imageBarber;
+        return $this->photoBarber;
     }
 
-    public function setImageBarber($imageBarber)
+    public function setPhotoBarber($photoBarber)
     {
-        $this->imageBarber = $imageBarber;
-    }
-
-    public function getDirImageBarber()
-    {
-        return $this->dirImageBarber;
-    }
-
-    public function setDirImageBarber($dirImageBarber)
-    {
-        $this->dirImageBarber = $dirImageBarber;
+        $this->photoBarber = $photoBarber;
     }
 
     public function getIdUser()

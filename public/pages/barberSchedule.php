@@ -5,13 +5,7 @@ require_once "../../src/classes/Barber.php";
 verifyLogin('barber');
 
 $barber = new Barber($_SESSION['idUser']);
-$result = $barber->viewTodaySchedule();
-
-$message = '';
-if (isset($_SESSION['msg'])) {
-    $message =  $_SESSION['msg'];
-    unset($_SESSION['msg']);
-}
+$result = $barber->viewSchedule();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -41,14 +35,12 @@ if (isset($_SESSION['msg'])) {
     </header>
 
     <main>
-        <h2>Bem vindo, <?php echo htmlspecialchars($barber->getNameBarber()); ?></h2>
 
         <section>
-            <p><?php echo $message?></p>
             <p><a href="editSchedule.php">Alterar agenda</a></p>
             <p><a href="barberSchedule.php">Veja sua agenda</a></p>
             <p><a href="barberHistoric.php">Ver Histórico</a></p>
-            <p><a href="../../src/php/logout.php">Sair</a></p>
+            <p><a href="barberAccount.php">Voltar</a></p>
         </section>
 
         <section>
@@ -88,7 +80,7 @@ if (isset($_SESSION['msg'])) {
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="5">Nenhum agendamento encontrado.</td>
+                            <td>Nenhum agendamento encontrado.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

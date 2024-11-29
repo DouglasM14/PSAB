@@ -8,14 +8,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $user = new User($email, $password);
 
-    $result = $user->login();
+    $result = $user->login($password);
 
     if (!$result) {
         echo '<p>Email ou senha incorretos.</p>';
     }
 
     // echo "<pre>";
-    // print_r($_SESSION);
+    // print_r($user);
     // echo "</pre>";
 }
 

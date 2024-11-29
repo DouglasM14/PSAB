@@ -1,5 +1,5 @@
 <?php
-// require_once "../../src/php/protect.php";
+require_once "../../src/php/protect.php";
 require_once "../../src/classes/Client.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div>
                     <label for="passwordClient">Senha: </label>
                     <input type="password" name="passwordClient" id="password">
-                    <span class="toggle-password" onmouseleave="togglePassword('password', '.toggle-password')" onmouseenter="togglePassword('password', '.toggle-password')">👁️</span>
+                    <span class="toggle-password" onclick="togglePassword('password', '.toggle-password')" onmouseenter="togglePassword('password', '.toggle-password')">👁️</span>
                 </div>
 
                 <div>

@@ -65,7 +65,7 @@ $result = $service->viewAllServices();
         </section>
 
         <section>
-            <p><a href="../index2.php">Voltar</a></p>
+            <p><a href="clientAccount.php">Voltar</a></p>
         </section>
     </main>
 
