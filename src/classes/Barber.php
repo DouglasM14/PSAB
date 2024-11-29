@@ -85,7 +85,7 @@ class Barber extends Database
     {
         $now = new DateTime();
         $scheduleDateTime = new DateTime("$day $time");
-    
+
         return $scheduleDateTime <= $now;
     }
 
@@ -120,17 +120,17 @@ class Barber extends Database
                 throw new Exception('Esse E-mail já é cadastrado.');
             }
 
+            $passCry = password_hash($password, PASSWORD_BCRYPT);
+
             $dataLogin = [
                 'emailUser' => $email,
-                'passwordUser' => $password,
+                'passwordUser' => $passCry,
                 'typeUser' => 'barber'
             ];
 
             $scheduleDefault = [
-                'unavaible' => [
-                    'date' => "",
-                    'times' => []
-                ]
+                'date' => "",
+                'times' => []
             ];
 
             $this->insert('tb_userLogin', $dataLogin);
@@ -140,7 +140,7 @@ class Barber extends Database
             $dataBarber = [
                 'nameBarber' => $name,
                 'emailBarber' => $email,
-                'passwordBarber' => $password,
+                'passwordBarber' => $passCry,
                 'unavailabilityBarber' => json_encode($scheduleDefault),
                 'photoBarber' => $photo,
                 'idUser' => $lastId

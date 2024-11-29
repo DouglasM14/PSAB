@@ -135,6 +135,13 @@ class Client extends Database
             $this->insert('tb_client', $dataClient);
             $this->transaction('commit');
 
+            if(!isset($_SESSION)){
+                session_start();
+            }
+
+            $_SESSION['typeUser'] = 'client';
+            $_SESSION['idUser'] = $lastId;
+            
             header("location: clientAccount.php");
         } catch (Exception $e) {
             $this->transaction('rollBack');

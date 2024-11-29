@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Etec de Heliopolis - Arquiteto Ruy Ohtake 2024</p>
     </footer>
 
-    <script src="../../src/js/scheduling.js?"></script>
+    <script src="../../src/js/scheduling.js"></script>
 </body>
 
 </html>

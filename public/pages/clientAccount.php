@@ -7,6 +7,10 @@ verifyLogin('client');
 $client = new Client($_SESSION['idUser']);
 $result = $client->viewTodaySchedule();
 
+echo "<pre>"; 
+print_r($result);
+echo "</pre>";
+
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $name = htmlspecialchars($_POST['nameClient']);
     $email = htmlspecialchars($_POST['emailClient']);
@@ -22,9 +26,9 @@ if (isset($_SESSION['msg'])) {
     unset($_SESSION['msg']);
 }
 
-echo "<pre>"; 
-print_r($_SESSION);
-echo "</pre>";
+// echo "<pre>"; 
+// print_r($_SESSION);
+// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +96,7 @@ echo "</pre>";
 
                 <div>
                     <label for="passwordClient">Senha:</label>
-                    <input name="passwordClient" value="<?= htmlspecialchars($client->getPasswordClient()) ?>" type="password" id="passwordClient" required>
+                    <input name="passwordClient" value="" type="password" id="passwordClient" required>
                 </div>
 
                 <div>

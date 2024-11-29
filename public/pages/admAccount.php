@@ -106,8 +106,8 @@ if (isset($_SESSION['msg'])) {
                 <tr>
                     <th>ID</th>
                     <th>Serviço</th>
-                    <th>Icone</th>
                     <th>Descrição</th>
+                    <th>Icone</th>
                     <th>Preço</th>
                     <th>Preço fim de semana</th>
                     <th></th>

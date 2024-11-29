@@ -18,19 +18,21 @@ class User extends Database
     public function login($pass)
     {
         $login = $this->select("tb_userLogin", "*", "emailUser = '{$this->getEmail()}' LIMIT 1");
+        password_verify($pass, $login[0]['passwordUser']);
         if (count($login) == 1) {
             if (password_verify($pass, $login[0]['passwordUser'])) {
                 $this->setIdUser($login[0]['idUser']);
-                $this->setTypeUser($login[0]['typeUser']);
-                
+
                 if (!isset($_SESSION)) {
                     session_start();
                 }
-                
+
                 $_SESSION['idUser'] = $this->getIdUser();
                 $_SESSION['emailUser'] = $this->getEmail();
-                $_SESSION['typeUser'] = $this->getTypeUser();;
+                // $_SESSION['passwordUser'] = $this->getPassword();
+                $_SESSION['typeUser'] = $login[0]['typeUser'];
 
+                //esse switch morreu
                 switch ($login[0]['typeUser']) {
                     case 'client':
                         $this->setTypeUser('client');
@@ -98,4 +100,24 @@ class User extends Database
     {
         $this->typeUser = $typeUser;
     }
+
+    //     public function insertAdm()
+    //     {
+    //         $pass = password_hash("A#karrar0#e#a#melh0r#barbearia", PASSWORD_BCRYPT);
+
+    //         $dataA = [
+    //             "nameAdm" => "Tiko",
+    //             "passwordAdm" => $pass,
+    //             "emailAdm" => "karraroAdm@gmail.com",
+    //             "idUser" => 1
+    //         ];
+    //         $dataU = [
+    //             "passwordUser" => $pass,
+    //             "emailUser" => "karraroAdm@gmail.com",
+    //             "typeUser" => 'adm'
+    //         ];
+
+    //         $this->insert("tb_userlogin", $dataU);
+    //         $this->insert("tb_adm", $dataA);
+    //     }
 }

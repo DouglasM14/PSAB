@@ -1,0 +1,36 @@
+-----------------------------------
+-cliente 1
+dougMacedoPereira32@gmail.com
+Macedo#1315
+
+-cliente 2
+thyago_Barboza@gmail.com
+BarbozaS213
+
+-cliente 3
+HerikCruz@gmail.com
+musculoTeixeira123
+
+-cliente 4
+BitorCherek@gmail.com
+BitorMole321
+
+-cliente 5
+marcusVyeira2309@gmail.com
+Massari#Luv123
+-----------------------------------
+-barbeiro 1
+Tico@gmail.com
+#barbeiroN1
+
+-barbeiro 2
+Raridade@gmail.com
+raridade@2001
+
+-barbeiro 3
+Daniel@gmail.com
+Daniznin$2003
+-----------------------------------
+-Adm
+karraroAdm@gmail.com
+A#karrar0#e#a#melh0r#barbearia
