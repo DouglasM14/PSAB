@@ -124,11 +124,9 @@ $barber = new Barber($_SESSION['idUser']);
                     formData.append('time', inputTime.value);
                 }
 
-                if (action === 'ativate') {
-                    formData.append('option', "ativate")
-                } else if (action === 'desative') {
-                    formData.append('option', "desativate")
-                }
+                if (action === 'ativate') formData.append('option', "ativate")
+                if (action === 'desativate') formData.append('option', "desativate")
+
 
                 const response = await fetch("../../src/php/getUnavibility.php?", {
                     method: "POST",
@@ -158,7 +156,6 @@ $barber = new Barber($_SESSION['idUser']);
 
                 const data = await response.json();
                 const daysOff = JSON.parse(data)
-                console.log(daysOff);
 
                 const tbody = document.getElementById('tbody');
                 tbody.innerHTML = ''; // Limpa o corpo da tabela
