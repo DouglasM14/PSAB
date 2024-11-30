@@ -23,7 +23,6 @@ to do:
     - Verificar se funcionou horários disponíveis para os clientes
 
 ++Impedir que os horários de funcionamento sejam trocados caso tenham agendamentos
-++Alterar uma hora de pausa geral para a barbearia
 ++Alteraçõs precisarem de Senha
 ++Fazer sistema de Notificação
 ++"Esqueci minha Senha"

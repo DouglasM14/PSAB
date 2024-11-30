@@ -21,13 +21,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($opt == "ativate") {
-        foreach ($dataSchedule as $key => $d) {
-            if ($d === $day && in_array($hour, $dayHour['times'])) {
-                unset($dataSchedule[$key]);
-                break;
-            }
+        $c = 0;
+        foreach ($dataSchedule as $element) {
+            $c++;
+            // if (empty($element['times']) && $element['date'] == $day) {
+            //     unset($dataSchedule[$c]);
+            //     break;
+            // }
+
+            // if (empty($element['times'])) {
+            //     unset($dataSchedule[$c]);
+            //     break;
+            // }
+
+            // if (in_array($hour, $element['times']) && $element['date'] == $day) {
+            //     unset($dataSchedule[$c]);
+            //     break;
+            // }
         }
-        $barber->updateBarberSchedule($dataSchedule);
         echo json_encode($dataSchedule);
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
