@@ -32,7 +32,6 @@ class User extends Database
                 // $_SESSION['passwordUser'] = $this->getPassword();
                 $_SESSION['typeUser'] = $login[0]['typeUser'];
 
-                //esse switch morreu
                 switch ($login[0]['typeUser']) {
                     case 'client':
                         $this->setTypeUser('client');

@@ -138,7 +138,6 @@ $barber = new Barber($_SESSION['idUser']);
                 }
 
                 const data = await response.json();
-                console.log(data);
 
                 await getBarberDayOff()
             } catch (error) {
@@ -158,7 +157,7 @@ $barber = new Barber($_SESSION['idUser']);
                 const daysOff = JSON.parse(data)
 
                 const tbody = document.getElementById('tbody');
-                tbody.innerHTML = ''; // Limpa o corpo da tabela
+                tbody.innerHTML = '';
 
                 if (daysOff.length > 0) {
                     daysOff.forEach(element => {

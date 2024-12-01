@@ -7,9 +7,9 @@ verifyLogin('client');
 $client = new Client($_SESSION['idUser']);
 $result = $client->viewTodaySchedule();
 
-echo "<pre>"; 
-print_r($result);
-echo "</pre>";
+// echo "<pre>"; 
+// print_r($result);
+// echo "</pre>";
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $name = htmlspecialchars($_POST['nameClient']);

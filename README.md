@@ -15,14 +15,12 @@ se o horario escolhido está disponivel na agenda do barbeiro - AJAX pq tem o di
 
 to do: 
 ++fazer o sistema de horários escolher agenda:
-    - Mostrar os dias que o Barbeiro tem na agenda(como check box)
-    - Mostrar os horários disponíveis para ele escolher(como check box)
-    - Mandar os horários para o PHP
-    - Salvar o JSON no banco de dados
-    - Desativar caso o dia ou o horário já tenha passado
     - Verificar se funcionou horários disponíveis para os clientes
 
+++Erro quando tenta fazer login com conta que não existe
+++Relógio da meia noite só conta quando vc esta na página do barbeiro
 ++Impedir que os horários de funcionamento sejam trocados caso tenham agendamentos
+e
 ++Alteraçõs precisarem de Senha
 ++Fazer sistema de Notificação
 ++"Esqueci minha Senha"

@@ -37,9 +37,6 @@ $result = $barber->viewSchedule();
     <main>
 
         <section>
-            <p><a href="editSchedule.php">Alterar agenda</a></p>
-            <p><a href="barberSchedule.php">Veja sua agenda</a></p>
-            <p><a href="barberHistoric.php">Ver Histórico</a></p>
             <p><a href="barberAccount.php">Voltar</a></p>
         </section>
 

@@ -29,7 +29,7 @@ function updateClock() {
             .catch(error => {
                 console.error(error)
             })
-    } 
+    }
 }
 
 setInterval(updateClock, 1000);
